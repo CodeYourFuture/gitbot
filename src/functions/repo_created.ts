@@ -1,6 +1,6 @@
 import type { Handler, HandlerResponse } from "@netlify/functions";
 
-import { handleRepoCreation } from "./core.js";
+import { handleRepoCreation } from "../core/index.js";
 
 const enum HttpStatus {
 	OK = 200

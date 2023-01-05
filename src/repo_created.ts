@@ -4,7 +4,7 @@ const enum HttpStatus {
 	OK = 200
 }
 
-const handler: Handler = async (event, context): Promise<HandlerResponse> => {
+const handler: Handler = async (): Promise<HandlerResponse> => {
 	return { statusCode: HttpStatus.OK };
 };
 

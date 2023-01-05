@@ -8,11 +8,14 @@ interface Repository {
 	userUrl: string;
 }
 
-export async function getRepoDetails(payload: string, signature: string, secret: string): Promise<Repository> {
+export async function getRepoDetails(payload: string, signature: string, secret: string): Promise<Repository | null> {
 	const valid = await verify(secret, payload, signature);
 	if (!valid) {
 		throw new Error("invalid payload");
 	}
-	const { repository: { name, owner, url } } : RepositoryCreatedEvent = JSON.parse(payload);
+	const { action, repository: { name, owner, url } } : RepositoryCreatedEvent = JSON.parse(payload);
+	if (action !== "created") {
+		return null;
+	}
 	return { repoName: name, repoUrl: url, userName: owner.login, userUrl: owner.url };
 }

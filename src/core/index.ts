@@ -6,7 +6,9 @@ export async function handleRepoCreation(payload: string | null, signature?: str
 		throw new Error("missing payload or signature");
 	}
 	const details = await getRepoDetails(payload, signature, secret);
-	console.log(`Repository ${details.repoName} created by ${details.userName}`);
+	if (details !== null) {
+		console.log(`Repository ${details.repoName} created by ${details.userName}`);
+	}
 }
 
 const getConfig = (name: string): string => {

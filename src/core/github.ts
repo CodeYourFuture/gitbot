@@ -13,9 +13,9 @@ export async function getRepoDetails(payload: string, signature: string, secret:
 	if (!valid) {
 		throw new Error("invalid payload");
 	}
-	const { action, repository: { name, owner, url } } : RepositoryCreatedEvent = JSON.parse(payload);
+	const { action, repository: { html_url, name }, sender } : RepositoryCreatedEvent = JSON.parse(payload);
 	if (action !== "created") {
 		return null;
 	}
-	return { repoName: name, repoUrl: url, userName: owner.login, userUrl: owner.url };
+	return { repoName: name, repoUrl: html_url, userName: sender.login, userUrl: sender.html_url };
 }

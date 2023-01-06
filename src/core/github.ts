@@ -1,12 +1,7 @@
 import { verify } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryCreatedEvent } from "@octokit/webhooks-types";
 
-interface Repository {
-	repoName: string;
-	repoUrl: string;
-	userName: string;
-	userUrl: string;
-}
+import type { Repository } from "./types";
 
 export async function getRepoDetails(payload: string, signature: string, secret: string): Promise<Repository | null> {
 	const valid = await verify(secret, payload, signature);
@@ -19,7 +14,7 @@ export async function getRepoDetails(payload: string, signature: string, secret:
 		return null;
 	}
 	const {
-		repository: { html_url: repoUrl, name: repoName },
+		repository: { full_name: repoName, html_url: repoUrl },
 		sender: { html_url: userUrl, login: userName },
 	} = event;
 	return { repoName, repoUrl, userName, userUrl };

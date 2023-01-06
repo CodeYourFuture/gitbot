@@ -30,5 +30,6 @@ export async function notifyChannel(
 			},
 		],
 		channel,
+		text: `A new repository was just created by ${userName ? userName : userLogin}`,
 	});
 }

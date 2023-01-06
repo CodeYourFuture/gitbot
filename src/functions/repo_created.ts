@@ -8,7 +8,7 @@ const enum HttpStatus {
 
 const handler: Handler = async (event): Promise<HandlerResponse> => {
 	try {
-		await handleRepoCreation(event.body, event.headers["x-hub-signature-256"]);
+		await handleRepoCreation(event.body ?? undefined, event.headers["x-hub-signature-256"]);
 	} catch (err) {
 		console.error(err);
 	}

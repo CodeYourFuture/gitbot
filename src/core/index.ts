@@ -2,7 +2,7 @@ import { getRepoDetails } from "./github.js";
 import { notifyChannel } from "./slack.js";
 import { getConfig } from "./utils.js";
 
-export async function handleRepoCreation(payload: string | null, signature?: string): Promise<void> {
+export async function handleRepoCreation(payload?: string, signature?: string): Promise<void> {
 	if (!payload || !signature) {
 		throw new Error("missing payload or signature");
 	}

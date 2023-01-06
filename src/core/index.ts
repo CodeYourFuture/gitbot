@@ -1,5 +1,6 @@
 import { getRepoDetails } from "./github.js";
 import { notifyChannel } from "./slack.js";
+import { getConfig } from "./utils.js";
 
 export async function handleRepoCreation(payload: string | null, signature?: string): Promise<void> {
 	if (!payload || !signature) {
@@ -11,11 +12,3 @@ export async function handleRepoCreation(payload: string | null, signature?: str
 		await notifyChannel(getConfig("SLACK_TOKEN"), getConfig("SLACK_CHANNEL"), details);
 	}
 }
-
-const getConfig = (name: string): string => {
-	const value = process.env[name];
-	if (!value) {
-		throw new Error(`missing configuration ${name}`);
-	}
-	return value;
-};

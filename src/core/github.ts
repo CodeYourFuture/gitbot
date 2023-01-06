@@ -1,9 +1,9 @@
 import { verify } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryEvent } from "@octokit/webhooks-types";
 
-import type { Repository } from "./types";
+import type { Maybe, Repository } from "./types";
 
-export async function getRepoDetails(payload: string, signature: string, secret: string): Promise<Repository | undefined> {
+export async function getRepoDetails(payload: string, signature: string, secret: string): Promise<Maybe<Repository>> {
 	const valid = await verify(secret, payload, signature);
 	if (!valid) {
 		throw new Error("invalid payload");

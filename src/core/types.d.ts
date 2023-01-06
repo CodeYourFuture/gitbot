@@ -1,6 +1,7 @@
 export interface Repository {
 	repoName: string;
 	repoUrl: string;
-	userName: string;
+	userLogin: string;
+	userName?: string;
 	userUrl: string;
 }

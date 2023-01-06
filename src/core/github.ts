@@ -15,7 +15,7 @@ export async function getRepoDetails(payload: string, signature: string, secret:
 	}
 	const {
 		repository: { full_name: repoName, html_url: repoUrl },
-		sender: { html_url: userUrl, login: userName },
+		sender: { html_url: userUrl, login: userLogin, name: userName },
 	} = event;
-	return { repoName, repoUrl, userName, userUrl };
+	return { repoName, repoUrl, userLogin, userName, userUrl };
 }

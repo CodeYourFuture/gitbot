@@ -5,7 +5,7 @@ import type { Repository } from "./types";
 export async function notifyChannel(
 	token: string,
 	channel: string,
-	{ repoName, repoUrl, userName, userUrl }: Repository,
+	{ repoName, repoUrl, userLogin, userName, userUrl }: Repository,
 ): Promise<void> {
 	const client = new WebClient(token);
 	await client.chat.postMessage({
@@ -14,7 +14,7 @@ export async function notifyChannel(
 				type: "section",
 				text: {
 					type: "mrkdwn",
-					text: `A new repository <${repoUrl}|\`${repoName}\`> was just created by <${userUrl}|\`${userName}\`>.`,
+					text: `A new repository <${repoUrl}|\`${repoName}\`> was just created by <${userUrl}|${userName ? userName : `\`${userLogin}\``}>.`,
 				},
 				accessory: {
 					action_id: "delete-repo",

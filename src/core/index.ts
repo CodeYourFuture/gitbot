@@ -7,7 +7,7 @@ export async function handleRepoCreation(payload: string | null, signature?: str
 	}
 	const details = await getRepoDetails(payload, signature, getConfig("GITHUB_WEBHOOK_SECRET"));
 	if (details !== null) {
-		console.log(`Repository ${details.repoName} created by ${details.userName}`);
+		console.log(`Repository ${details.repoName} created by ${details.userName ?? details.userLogin}`);
 		await notifyChannel(getConfig("SLACK_TOKEN"), getConfig("SLACK_CHANNEL"), details);
 	}
 }

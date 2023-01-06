@@ -35,9 +35,8 @@ jobs:
       - run: "npm ci"
       - run: "npm run build"
       - run: "npm prune --omit dev"
-      - uses: "netlify/actions/cli@master"
-        with:
-          args: "deploy --dir . --prod true"
+      - run: "npm install --global netlify-cli"
+      - run: "netlify deploy --dir . --prod true"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

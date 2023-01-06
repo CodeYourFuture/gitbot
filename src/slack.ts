@@ -1,15 +1,20 @@
 import { type Button, type SectionBlock, WebClient } from "@slack/web-api";
 
 import type { Repository } from "./types";
+import { getConfig } from "./utils.js";
 
-export async function notifyChannel(token: string, channel: string, repository: Repository): Promise<void> {
+export async function notifyChannel(repo: Repository): Promise<void> {
+	const channel = getConfig("SLACK_CHANNEL");
+	const token = getConfig("SLACK_TOKEN");
 	const client = new WebClient(token);
+	const text = `A new repository ${repo.repoName} was just created by ${repo.userName ?? repo.userLogin}`;
+	console.log(text);
 	await client.chat.postMessage({
 		blocks: [
-			repoSection(repository),
+			repoSection(repo),
 		],
 		channel,
-		text: `A new repository was just created by ${repository.userName ?? repository.userLogin}`,
+		text,
 	});
 }
 

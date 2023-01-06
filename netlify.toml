@@ -1,3 +1,3 @@
 [functions]
-    directory = "lib/functions/"
+    directory = "lib/netlify/"
     node_bundler = "esbuild"

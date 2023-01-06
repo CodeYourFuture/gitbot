@@ -21,6 +21,11 @@ jobs:
       - run: "npm ci"
       - run: "npm run lint"
       - run: "npm run build"
+      - uses: "actions/upload-artifact@v3"
+        with:
+          if-no-files-found: "error"
+          name: "build-output"
+          path: "lib/"
   deploy:
     needs:
       - "check"
@@ -32,9 +37,11 @@ jobs:
         with:
           cache: "npm"
           node-version: "16"
-      - run: "npm ci"
-      - run: "npm run build"
-      - run: "npm prune --omit dev"
+      - run: "npm ci --omit dev"
+      - uses: "actions/download-artifact@v3"
+        with:
+          name: "build-output"
+          path: "lib/"
       - run: "npm install --global netlify-cli"
       - run: "netlify deploy --dir . --prod true"
         env:

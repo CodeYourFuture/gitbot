@@ -1,3 +1,4 @@
 .netlify/
 lib/
 node_modules/
+reports/

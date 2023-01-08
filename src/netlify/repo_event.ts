@@ -9,7 +9,9 @@ const enum HttpStatus {
 	BAD_REQUEST = 400,
 }
 
-const handler: Handler = async (event): Promise<HandlerResponse> => {
+type Event = Pick<HandlerEvent, "body" | "headers">
+
+const handler = async (event: Event): Promise<HandlerResponse> => {
 	let payload: Maybe<Repository>;
 	try {
 		payload = await validatePayload(getBody(event), getSignature(event));
@@ -27,14 +29,17 @@ const handler: Handler = async (event): Promise<HandlerResponse> => {
 	return { statusCode: HttpStatus.OK };
 };
 
-const getBody = ({ body }: Pick<HandlerEvent, "body">): string => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const typecheck = handler satisfies Handler;
+
+const getBody = ({ body }: Event): string => {
 	if (body === null) {
 		throw new Error("missing request body");
 	}
 	return body;
 };
 
-const getSignature = ({ headers }: Pick<HandlerEvent, "headers">): string => {
+const getSignature = ({ headers }: Event): string => {
 	const signature = headers[SIGNATURE_HEADER];
 	if (signature === undefined) {
 		throw new Error("missing signature header");

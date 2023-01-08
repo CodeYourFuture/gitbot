@@ -6,6 +6,19 @@
   "ignorePatterns": [
     "lib/"
   ],
+  "overrides": [
+    {
+      "files": [
+        "src/**/*.test.ts"
+      ],
+      "extends": [
+        "plugin:jest/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off"
+      }
+    }
+  ],
   "parser": "@typescript-eslint/parser",
   "root": true,
   "rules": {

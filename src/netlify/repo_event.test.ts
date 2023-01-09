@@ -46,6 +46,7 @@ describe("repo event handler", () => {
 				},
 				type: "button",
 				url: "https://github.com/Foo/Bar/settings#danger-zone",
+				value: "Foo/Bar",
 			},
 			text: {
 				"text": "A new repository <https://github.com/Foo/Bar|`Foo/Bar`> was just created by <https://github.com/octocat|Monalisa Octocat>.",

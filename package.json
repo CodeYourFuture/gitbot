@@ -1,7 +1,7 @@
 {
   "name": "@codeyourfuture/gitbot",
   "version": "0.1.0",
-  "description": "",
+  "description": "Integrating GitHub and Slack via Netlify",
   "type": "module",
   "main": "lib/repo_created.js",
   "files": [

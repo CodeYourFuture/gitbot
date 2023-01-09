@@ -7,3 +7,8 @@ export interface Repository {
 	userName?: string;
 	userUrl: string;
 }
+
+export interface RepoRef {
+	owner: string;
+	repo: string;
+}

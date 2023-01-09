@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@octokit/core": "^4.1.0",
+    "@octokit/rest": "^19.0.5",
     "@octokit/webhooks-methods": "^3.0.1",
     "@slack/web-api": "^6.8.0"
   }

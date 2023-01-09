@@ -39,13 +39,31 @@ describe("repo event handler", () => {
 		expect(JSON.parse(payload.blocks)).toEqual([{
 			accessory: {
 				action_id: "delete-repo",
+				confirm: {
+					confirm: {
+						text: "Yes",
+						type: "plain_text",
+					},
+					deny: {
+						text: "No",
+						type: "plain_text",
+					},
+					style: "danger",
+					text: {
+						text: "Are you sure you want to delete the repository `Foo/Bar`? This cannot be undone.",
+						type: "mrkdwn",
+					},
+					title: {
+						text: "Delete the repository?",
+						type: "plain_text",
+					},
+				},
 				style: "danger",
 				text: {
 					text: "Delete repo",
 					type: "plain_text",
 				},
 				type: "button",
-				url: "https://github.com/Foo/Bar/settings#danger-zone",
 				value: "Foo/Bar",
 			},
 			text: {

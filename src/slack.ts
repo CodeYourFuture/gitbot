@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { type Button, type SectionBlock, WebClient } from "@slack/web-api";
 
-import type { Repository } from "./types";
+import type { Maybe, Repository, RepoRef } from "./types";
 import { getConfig } from "./utils.js";
 
 export const SIGNATURE_HEADER = "x-slack-signature";
@@ -24,7 +24,7 @@ export async function notifyChannel(repo: Repository): Promise<void> {
 	});
 }
 
-export const validatePayload = async (body: string, signature: string, timestamp: number): Promise<void> => {
+export const validatePayload = async (body: string, signature: string, timestamp: number): Promise<Maybe<RepoRef>> => {
 	const [version, hash] = signature.split("=");
 	if (version !== VERSION) {
 		throw new Error("invalid signature version");
@@ -41,7 +41,8 @@ export const validatePayload = async (body: string, signature: string, timestamp
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const action = payload.actions?.find(({ action_id }: any) => action_id === "delete-repo");
 	if (action) {
-		console.log(`Received action ${action.action_id} with value ${action.value}`);
+		const [owner, repo] = action.value.split("/");
+		return { owner, repo };
 	}
 };
 
@@ -57,9 +58,18 @@ const repoSection = ({ repoName, repoUrl, userLogin, userName, userUrl }: Reposi
 const deleteButton = (repoName: string): Button => ({
 	type: "button",
 	action_id: "delete-repo",
+	confirm: {
+		confirm: { text: "Yes", type: "plain_text" },
+		deny: { text: "No", type: "plain_text" },
+		style: "danger",
+		text: {
+			text: `Are you sure you want to delete the repository \`${repoName}\`? This cannot be undone.`,
+			type: "mrkdwn",
+		},
+		title: { text: "Delete the repository?", type: "plain_text" },
+	},
 	style: "danger",
 	text: { type: "plain_text", text: "Delete repo" },
-	url: `https://github.com/${repoName}/settings#danger-zone`,
 	value: repoName,
 });
 

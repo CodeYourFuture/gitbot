@@ -1,6 +1,7 @@
 import { createHmac } from "node:crypto";
 
 import { validatePayload } from "./slack.js";
+import type { Maybe, RepoRef } from "./types";
 
 describe("validatePayload", () => {
 	it("rejects invalid version", async () => {
@@ -39,7 +40,7 @@ describe("validatePayload", () => {
 		})).resolves.toBeUndefined();
 	});
 
-	it("resolves for a relevant action", async () => {
+	it("extracts the relevant action", async () => {
 		const body = `hello=world&payload=${JSON.stringify({ actions: [{ action_id: "delete-repo", value: "Foo/Bar" }] })}`;
 		const secret = "secretsquirrel";
 		process.env.SLACK_SIGNING_SECRET = secret;
@@ -48,14 +49,14 @@ describe("validatePayload", () => {
 			body,
 			timestamp,
 			signature,
-		})).resolves.toBeUndefined();
+		})).resolves.toEqual({ owner: "Foo", repo: "Bar" });
 	});
 
 	const attemptValidation = ({
 		body = "",
 		signature = "",
 		timestamp = 0,
-	}: { body?: string, signature?: string, timestamp?: number } = {}): Promise<void> => {
+	}: { body?: string, signature?: string, timestamp?: number } = {}): Promise<Maybe<RepoRef>> => {
 		return validatePayload(body, signature, timestamp);
 	};
 });

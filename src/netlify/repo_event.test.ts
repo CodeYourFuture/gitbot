@@ -3,7 +3,7 @@ import { sign } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryEvent } from "@octokit/webhooks-types";
 import { rest, RestRequest } from "msw";
 
-import { server } from "../../setupTests.js";
+import { getBody, server } from "../../setupTests.js";
 
 import { handler } from "./repo_event.js";
 
@@ -31,29 +31,46 @@ describe("repo event handler", () => {
 		expect(response).toEqual({ statusCode: 200 });
 		expect(request).not.toBeNull();
 		expect(request!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
-		const payload = Object.fromEntries(new URLSearchParams(await request!.text()).entries());
-		expect(payload).toMatchObject({
+		expect(getBody(await request!.text())).toMatchObject({
+			blocks: [{
+				accessory: {
+					action_id: "delete-repo",
+					confirm: {
+						confirm: {
+							text: "Yes",
+							type: "plain_text",
+						},
+						deny: {
+							text: "No",
+							type: "plain_text",
+						},
+						style: "danger",
+						text: {
+							text: "Are you sure you want to delete the repository `Foo/Bar`? This cannot be undone.",
+							type: "mrkdwn",
+						},
+						title: {
+							text: "Delete the repository?",
+							type: "plain_text",
+						},
+					},
+					style: "danger",
+					text: {
+						text: "Delete repo",
+						type: "plain_text",
+					},
+					type: "button",
+					value: "Foo/Bar",
+				},
+				text: {
+					"text": "A new repository <https://github.com/Foo/Bar|`Foo/Bar`> was just created by <https://github.com/octocat|Monalisa Octocat>.",
+					"type": "mrkdwn",
+				},
+				type: "section",
+			}],
 			channel: "SLACK_CHANNEL",
 			text: "A new repository Foo/Bar was just created by Monalisa Octocat",
 		});
-		expect(JSON.parse(payload.blocks)).toEqual([{
-			accessory: {
-				action_id: "delete-repo",
-				style: "danger",
-				text: {
-					text: "Delete repo",
-					type: "plain_text",
-				},
-				type: "button",
-				url: "https://github.com/Foo/Bar/settings#danger-zone",
-				value: "Foo/Bar",
-			},
-			text: {
-				"text": "A new repository <https://github.com/Foo/Bar|`Foo/Bar`> was just created by <https://github.com/octocat|Monalisa Octocat>.",
-				"type": "mrkdwn",
-			},
-			type: "section",
-		}]);
 	});
 
 	it("uses the login as a fallback", async () => {

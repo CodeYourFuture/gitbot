@@ -1,30 +1,31 @@
 import { createHmac } from "node:crypto";
 
 import { validatePayload } from "./slack.js";
+import type { Maybe, RepoRef } from "./types";
 
 describe("validatePayload", () => {
 	it("rejects invalid version", async () => {
-		await expect(attemptValidation({
+		expect(() => attemptValidation({
 			signature: "v1=abc123",
-		})).rejects.toThrow("invalid signature version");
+		})).toThrow("invalid signature version");
 	});
 
 	it("rejects old timestamp", async () => {
-		await expect(attemptValidation({
+		expect(() => attemptValidation({
 			signature: "v0=abc123",
 			timestamp: Math.floor((Date.now() / 1_000) - (6 * 60)),
-		})).rejects.toThrow("timestamp too old");
+		})).toThrow("timestamp too old");
 	});
 
 	it("rejects invalid hash", async () => {
 		const body = "goodbye=world";
 		process.env.SLACK_SIGNING_SECRET = "keepitquiet";
 		const { signature, timestamp } = sign(body, "someothersecret");
-		await expect(attemptValidation({
+		expect(() => attemptValidation({
 			body,
 			signature,
 			timestamp,
-		})).rejects.toThrow("payload validation failed");
+		})).toThrow("payload validation failed");
 	});
 
 	it("turns the body into an object", async () => {
@@ -32,30 +33,35 @@ describe("validatePayload", () => {
 		const secret = "secretsquirrel";
 		process.env.SLACK_SIGNING_SECRET = secret;
 		const { signature, timestamp } = sign(body, secret);
-		await expect(attemptValidation({
+		expect(attemptValidation({
 			body,
 			timestamp,
 			signature,
-		})).resolves.toBeUndefined();
+		})).toBeUndefined();
 	});
 
-	it("resolves for a relevant action", async () => {
-		const body = `hello=world&payload=${JSON.stringify({ actions: [{ action_id: "delete-repo", value: "Foo/Bar" }] })}`;
+	it("extracts the relevant action", async () => {
+		const payload = {
+			actions: [{ action_id: "delete-repo", value: "Foo/Bar" }],
+			message: { ts: "123.456" },
+			user: { id: "userId", username: "userName" },
+		};
+		const body = `hello=world&payload=${JSON.stringify(payload)}`;
 		const secret = "secretsquirrel";
 		process.env.SLACK_SIGNING_SECRET = secret;
 		const { signature, timestamp } = sign(body, secret);
-		await expect(attemptValidation({
+		expect(attemptValidation({
 			body,
 			timestamp,
 			signature,
-		})).resolves.toBeUndefined();
+		})).toEqual({ messageTs: "123.456", owner: "Foo", repo: "Bar", userId: "userId", userName: "userName" });
 	});
 
 	const attemptValidation = ({
 		body = "",
 		signature = "",
 		timestamp = 0,
-	}: { body?: string, signature?: string, timestamp?: number } = {}): Promise<void> => {
+	}: { body?: string, signature?: string, timestamp?: number } = {}): Maybe<RepoRef> => {
 		return validatePayload(body, signature, timestamp);
 	};
 });

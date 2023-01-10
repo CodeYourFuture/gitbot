@@ -39,20 +39,21 @@ sequenceDiagram
     alt Delete the repo
     Admin->>Slack: Click "Delete repo"
     Slack->>+Netlify: POST /slack_interaction
-    rect rgb(235, 235, 235)
     Netlify->>+GitHub: DELETE /repos/CodeYourFuture/{name}
     GitHub-->>-Netlify: 204 No Content
-    Netlify->>+Slack: POST /services/...
-    Note right of Slack: Update the post
+    Netlify->>+Slack: POST /reactions.add
+    Note right of Slack: React to the post
     Slack-->>-Netlify: 200 OK
-    end
+    Netlify->>+Slack: POST /chat.postMessage
+    Note right of Slack: Respond to the post
+    Slack-->>-Netlify: 200 OK
     Netlify-->>-Slack: 200 OK
     else Dismiss the message
     rect rgb(235, 235, 235)
     Admin->>Slack: Click "Dismiss"
     Slack->>+Netlify: POST /slack_interaction
-    Netlify->>+Slack: POST /services/...
-    Note right of Slack: Update the post
+    Netlify->>+Slack: POST /chat.postMessage
+    Note right of Slack: Respond to the post
     Slack-->>-Netlify: 200 OK
     Netlify-->>-Slack: 200 OK
     end
@@ -63,6 +64,7 @@ sequenceDiagram
 
 The Netlify functions require the following environment variables:
 
+- `GITHUB_TOKEN`: Token used to delete repos in GitHub
 - `GITHUB_WEBHOOK_SECRET`: Secret used to verify webhook calls from GitHub
 - `SLACK_CHANNEL`: The channel to post messages in (currently [#cyf-github-owners](https://codeyourfuture.slack.com/archives/C03LSS9TNRW))
 - `SLACK_SIGNING_SECRET`: Secret used to verify webhook calls from Slack

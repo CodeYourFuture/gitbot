@@ -9,6 +9,9 @@ export interface Repository {
 }
 
 export interface RepoRef {
+	messageTs: string;
 	owner: string;
 	repo: string;
+	userId: string;
+	userName: string;
 }

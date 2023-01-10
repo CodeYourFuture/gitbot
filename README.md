@@ -41,18 +41,19 @@ sequenceDiagram
     Slack->>+Netlify: POST /slack_interaction
     Netlify->>+GitHub: DELETE /repos/CodeYourFuture/{name}
     GitHub-->>-Netlify: 204 No Content
-    rect rgb(235, 235, 235)
-    Netlify->>+Slack: POST /services/...
-    Note right of Slack: Update the post
+    Netlify->>+Slack: POST /reactions.add
+    Note right of Slack: React to the post
     Slack-->>-Netlify: 200 OK
-    end
+    Netlify->>+Slack: POST /chat.postMessage
+    Note right of Slack: Respond to the post
+    Slack-->>-Netlify: 200 OK
     Netlify-->>-Slack: 200 OK
     else Dismiss the message
     rect rgb(235, 235, 235)
     Admin->>Slack: Click "Dismiss"
     Slack->>+Netlify: POST /slack_interaction
-    Netlify->>+Slack: POST /services/...
-    Note right of Slack: Update the post
+    Netlify->>+Slack: POST /chat.postMessage
+    Note right of Slack: Respond to the post
     Slack-->>-Netlify: 200 OK
     Netlify-->>-Slack: 200 OK
     end

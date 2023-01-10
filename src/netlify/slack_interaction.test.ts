@@ -3,34 +3,68 @@ import { createHmac } from "node:crypto";
 import { HandlerResponse } from "@netlify/functions";
 import { rest, RestRequest } from "msw";
 
-import { server } from "../../setupTests";
+import { getBody, server } from "../../setupTests";
 
 import { handler } from "./slack_interaction.js";
 
 describe("slack interaction handler", () => {
-	it("deletes the repository", async () => {
+	it("deletes the repository and updates the message", async () => {
 		const secret = "secretsquirrel";
-		process.env.SLACK_SIGNING_SECRET = secret;
 		process.env.GITHUB_TOKEN = "GITHUB_TOKEN";
-		let request: RestRequest | null = null;
+		process.env.SLACK_CHANNEL = "SLACK_CHANNEL";
+		process.env.SLACK_SIGNING_SECRET = secret;
+		process.env.SLACK_TOKEN = "SLACK_TOKEN";
+		let deleteRequest: RestRequest | null = null;
+		let reactRequest: RestRequest | null = null;
+		let updateRequest: RestRequest | null = null;
 		server.use(
 			rest.delete("https://api.github.com/repos/:owner/:repo", (req, res, ctx) => {
-				request = req;
+				deleteRequest = req;
 				return res(ctx.status(204));
+			}),
+			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+				updateRequest = req;
+				return res(ctx.json({ ok: true }));
+			}),
+			rest.post("https://slack.com/api/reactions.add", (req, res, ctx) => {
+				reactRequest = req;
+				return res(ctx.json({ ok: true }));
 			}),
 		);
 		const { body, signature, timestamp } = createPayload(secret, {
 			payload: JSON.stringify({
-				type: "block_actions",
 				actions: [{ action_id: "delete-repo", value: "owner/repo" }],
+				message: { ts: "messageTimestamp" },
+				type: "block_actions",
+				user: { id: "slackUserId", username: "slackUserName" },
 			}),
 		});
 
 		await expect(makeRequest(body, signature, timestamp)).resolves.toEqual({ statusCode: 200 });
 
-		expect(request).not.toBeNull();
-		expect(request!.headers.get("Authorization")).toBe("token GITHUB_TOKEN");
-		expect(request!.params).toEqual({ owner: "owner", repo: "repo" });
+		expect(deleteRequest).not.toBeNull();
+		expect(deleteRequest!.headers.get("Authorization")).toBe("token GITHUB_TOKEN");
+		expect(deleteRequest!.params).toEqual({ owner: "owner", repo: "repo" });
+
+		expect(reactRequest).not.toBeNull();
+		expect(reactRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
+		expect(getBody(await reactRequest!.text())).toMatchObject({
+			channel: "SLACK_CHANNEL",
+			name: "wastebasket",
+			timestamp: "messageTimestamp",
+		});
+
+		expect(updateRequest).not.toBeNull();
+		expect(updateRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
+		expect(getBody(await updateRequest!.text())).toMatchObject({
+			blocks: [{
+				text: { text: "Repository was deleted by <@slackUserId>.", type: "mrkdwn" },
+				type: "section",
+			}],
+			channel: "SLACK_CHANNEL",
+			text: "Repository owner/repo was deleted by slackUserName.",
+			ts: "messageTimestamp",
+		});
 	});
 
 	const createPayload = (secret: string, payload: Record<string, string>): { body: string, signature: string, timestamp: number } => {

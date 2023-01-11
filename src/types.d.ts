@@ -8,10 +8,9 @@ export interface Repository {
 	userUrl: string;
 }
 
-export interface RepoRef {
+export interface MessageRef {
 	messageTs: string;
-	owner: string;
-	repo: string;
+	repo: Repository;
 	userId: string;
 	userName: string;
 }

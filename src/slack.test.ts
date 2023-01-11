@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 
 import { validatePayload } from "./slack.js";
-import type { Maybe, RepoRef } from "./types";
+import type { Maybe, MessageRef } from "./types";
 
 describe("validatePayload", () => {
 	it("rejects invalid version", async () => {
@@ -42,9 +42,12 @@ describe("validatePayload", () => {
 
 	it("extracts the relevant action", async () => {
 		const payload = {
-			actions: [{ action_id: "delete-repo", value: "Foo/Bar" }],
+			actions: [{
+				action_id: "delete-repository",
+				value: JSON.stringify({ repoName: "repoName", repoUrl: "repoUrl", userName: "userName", userUrl: "userUrl" }),
+			}],
 			message: { ts: "123.456" },
-			user: { id: "userId", username: "userName" },
+			user: { id: "userId", username: "slackUserName" },
 		};
 		const body = `hello=world&payload=${JSON.stringify(payload)}`;
 		const secret = "secretsquirrel";
@@ -54,14 +57,24 @@ describe("validatePayload", () => {
 			body,
 			timestamp,
 			signature,
-		})).toEqual({ messageTs: "123.456", owner: "Foo", repo: "Bar", userId: "userId", userName: "userName" });
+		})).toEqual({
+			messageTs: "123.456",
+			repo: {
+				repoName: "repoName",
+				repoUrl: "repoUrl",
+				userName: "userName",
+				userUrl: "userUrl",
+			},
+			userId: "userId",
+			userName: "slackUserName",
+		});
 	});
 
 	const attemptValidation = ({
 		body = "",
 		signature = "",
 		timestamp = 0,
-	}: { body?: string, signature?: string, timestamp?: number } = {}): Maybe<RepoRef> => {
+	}: { body?: string, signature?: string, timestamp?: number } = {}): Maybe<MessageRef> => {
 		return validatePayload(body, signature, timestamp);
 	};
 });

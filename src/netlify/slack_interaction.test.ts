@@ -33,7 +33,10 @@ describe("slack interaction handler", () => {
 		);
 		const { body, signature, timestamp } = createPayload(secret, {
 			payload: JSON.stringify({
-				actions: [{ action_id: "delete-repo", value: "owner/repo" }],
+				actions: [{
+					action_id: "delete-repository",
+					value: JSON.stringify({ repoName: "owner/repo", repoUrl: "repoUrl", userName: "userName", userUrl: "userUrl" }),
+				}],
 				message: { ts: "messageTimestamp" },
 				type: "block_actions",
 				user: { id: "slackUserId", username: "slackUserName" },

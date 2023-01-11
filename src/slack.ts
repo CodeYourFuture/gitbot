@@ -3,10 +3,10 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import type { ActionsBlock, Button, MrkdwnElement, PlainTextElement, SectionBlock } from "@slack/web-api";
 import { WebClient } from "@slack/web-api";
 
-import type { Maybe, Repository, RepoRef } from "./types";
+import type { Maybe, Repository, MessageRef } from "./types";
 import { getConfig } from "./utils.js";
 
-const ACTION_ID = "delete-repo";
+const DELETE_ACTION_ID = "delete-repository";
 export const SIGNATURE_HEADER = "x-slack-signature";
 export const TIMESTAMP_HEADER = "x-slack-request-timestamp";
 const VERSION = "v0";
@@ -29,10 +29,10 @@ interface SlackInteraction {
 	};
 }
 
-export async function updateMessage({ messageTs, owner, repo, userId, userName }: RepoRef): Promise<void> {
+export async function updateMessage({ messageTs, repo: { repoName }, userId, userName }: MessageRef): Promise<void> {
 	const client = new WebClient(getConfig("SLACK_TOKEN"));
 	const channel = getConfig("SLACK_CHANNEL");
-	const text = `Repository ${owner}/${repo} was deleted by ${userName}.`;
+	const text = `Repository ${repoName} was deleted by ${userName}.`;
 	console.log(text);
 	await client.reactions.add({
 		channel,
@@ -63,42 +63,42 @@ export async function notifyChannel(repo: Repository): Promise<void> {
 	});
 }
 
-export const validatePayload = (body: string, signature: string, timestamp: number): Maybe<RepoRef> => {
+export const validatePayload = (body: string, signature: string, timestamp: number): Maybe<MessageRef> => {
 	if (!isValid(body, signature, timestamp)) {
 		throw new Error("payload validation failed");
 	}
 	return getPayload(JSON.parse(Object.fromEntries(new URLSearchParams(body).entries()).payload));
 };
 
-const actionsSection = ({ repoName }: Repository): ActionsBlock => ({
+const actionsSection = (repo: Repository): ActionsBlock => ({
 	elements: [
-		deleteButton(repoName),
+		deleteButton(repo),
 	],
 	type: "actions",
 });
 
-const deleteButton = (repoName: string): Button => ({
+const deleteButton = (repo: Repository): Button => ({
 	type: "button",
-	action_id: ACTION_ID,
+	action_id: DELETE_ACTION_ID,
 	confirm: {
 		confirm: plainText("Yes"),
 		deny: plainText("No"),
 		style: "danger",
-		text: plainText(`Are you sure you want to delete the repository ${repoName}? This cannot be undone.`),
+		text: plainText(`Are you sure you want to delete the repository ${repo.repoName}? This cannot be undone.`),
 		title: plainText("Delete the repository?"),
 	},
 	style: "danger",
 	text: plainText("Delete repo"),
-	value: repoName,
+	value: JSON.stringify(repo),
 });
 
 const fiveMinutesAgo = () => Math.floor((Date.now() / 1_000) - (5 * 60));
 
-const getPayload = ({ actions = [], message, user }: SlackInteraction): Maybe<RepoRef> => {
-	const action = actions.find(({ action_id }) => action_id === ACTION_ID);
+const getPayload = ({ actions = [], message, user }: SlackInteraction): Maybe<MessageRef> => {
+	const action = actions.find(({ action_id }) => action_id === DELETE_ACTION_ID);
 	if (action && action.value) {
-		const [owner, repo] = action.value.split("/");
-		return { messageTs: message.ts, owner, repo, userId: user.id, userName: user.username };
+		const repo: Repository = JSON.parse(action.value);
+		return { messageTs: message.ts, repo, userId: user.id, userName: user.username };
 	}
 };
 

@@ -2,12 +2,12 @@ import { Handler, HandlerEvent, HandlerResponse } from "@netlify/functions";
 
 import { deleteRepo } from "../github.js";
 import { SIGNATURE_HEADER, TIMESTAMP_HEADER, updateMessage, validatePayload } from "../slack.js";
-import type { Maybe, RepoRef } from "../types";
+import type { Maybe, MessageRef } from "../types";
 
 type Event = Pick<HandlerEvent, "body" | "headers">;
 
 const handler = async (event: Event): Promise<HandlerResponse> => {
-	let payload: Maybe<RepoRef>;
+	let payload: Maybe<MessageRef>;
 	try {
 		payload = validatePayload(getBody(event), getSignature(event), getTimestamp(event));
 	} catch (err) {

@@ -2,12 +2,13 @@ import { Octokit } from "@octokit/rest";
 import { verify } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryCreatedEvent, RepositoryEvent } from "@octokit/webhooks-types";
 
-import type { Maybe, RepoRef, Repository } from "./types";
+import type { Maybe, MessageRef, Repository } from "./types";
 import { getConfig } from "./utils.js";
 
 export const SIGNATURE_HEADER = "x-hub-signature-256";
 
-export const deleteRepo = async ({ owner, repo }: RepoRef): Promise<void> => {
+export const deleteRepo = async ({ repo: { repoName } }: MessageRef): Promise<void> => {
+	const [owner, repo] = repoName.split("/");
 	const client = new Octokit({ auth: getConfig("GITHUB_TOKEN") });
 	await client.rest.repos.delete({ owner, repo });
 };

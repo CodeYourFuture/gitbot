@@ -42,7 +42,7 @@ describe("repo event handler", () => {
 				}, {
 					elements: [
 						{
-							action_id: "delete-repo",
+							action_id: "delete-repository",
 							confirm: {
 								confirm: {
 									text: "Yes",
@@ -68,7 +68,13 @@ describe("repo event handler", () => {
 								type: "plain_text",
 							},
 							type: "button",
-							value: "Foo/Bar",
+							value: JSON.stringify({
+								repoName: "Foo/Bar",
+								repoUrl: "https://github.com/Foo/Bar",
+								userLogin: "octocat",
+								userName: "Monalisa Octocat",
+								userUrl: "https://github.com/octocat",
+							}),
 						},
 					],
 					type: "actions",

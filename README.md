@@ -67,8 +67,8 @@ sequenceDiagram
 
 The Netlify functions require the following environment variables:
 
-- `GITHUB_TOKEN`: Token used to delete repos in GitHub
+- `GITHUB_TOKEN`: Token used to delete repos in GitHub (with scope `delete_repo`)
 - `GITHUB_WEBHOOK_SECRET`: Secret used to verify webhook calls from GitHub
 - `SLACK_CHANNEL`: The channel to post messages in (currently [#cyf-github-owners](https://codeyourfuture.slack.com/archives/C03LSS9TNRW))
 - `SLACK_SIGNING_SECRET`: Secret used to verify webhook calls from Slack
-- `SLACK_TOKEN`: Token used to post messages to Slack
+- `SLACK_TOKEN`: Token used to post messages to Slack (with scopes `chat:write` and `reactions:write`)

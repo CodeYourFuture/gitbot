@@ -46,8 +46,8 @@ describe("repo event handler", () => {
 						},
 						style: "danger",
 						text: {
-							text: "Are you sure you want to delete the repository `Foo/Bar`? This cannot be undone.",
-							type: "mrkdwn",
+							text: "Are you sure you want to delete the repository Foo/Bar? This cannot be undone.",
+							type: "plain_text",
 						},
 						title: {
 							text: "Delete the repository?",

@@ -76,7 +76,7 @@ const deleteButton = (repoName: string): Button => ({
 		confirm: plainText("Yes"),
 		deny: plainText("No"),
 		style: "danger",
-		text: markdown(`Are you sure you want to delete the repository \`${repoName}\`? This cannot be undone.`),
+		text: plainText(`Are you sure you want to delete the repository ${repoName}? This cannot be undone.`),
 		title: plainText("Delete the repository?"),
 	},
 	style: "danger",

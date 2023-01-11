@@ -52,6 +52,9 @@ sequenceDiagram
     rect rgb(235, 235, 235)
     Admin->>Slack: Click "Dismiss"
     Slack->>+Netlify: POST /slack_interaction
+    Netlify->>+Slack: POST /reactions.add
+    Note right of Slack: React to the post
+    Slack-->>-Netlify: 200 OK
     Netlify->>+Slack: POST /chat.postMessage
     Note right of Slack: Respond to the post
     Slack-->>-Netlify: 200 OK

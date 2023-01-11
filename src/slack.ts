@@ -43,7 +43,7 @@ export async function updateMessage({ messageTs, owner, repo, userId, userName }
 		channel,
 		blocks: [{ text: markdown(`Repository was deleted by <@${userId}>.`), type: "section" }],
 		text,
-		ts: messageTs,
+		thread_ts: messageTs,
 	});
 }
 

@@ -31,7 +31,7 @@ describe("repo event handler", () => {
 		expect(response).toEqual({ statusCode: 200 });
 		expect(request).not.toBeNull();
 		expect(request!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
-		expect(getBody(await request!.text())).toMatchObject({
+		expect(getBody(await request!.text())).toEqual({
 			blocks: [{
 				accessory: {
 					action_id: "delete-repo",
@@ -91,10 +91,16 @@ describe("repo event handler", () => {
 
 		await expect(makeRequest(body, signature)).resolves.toEqual({ statusCode: 200 });
 
-		const payload = Object.fromEntries(new URLSearchParams(await request!.text()).entries());
-		expect(payload).toHaveProperty("text", "A new repository Foo/Bar was just created by octocat");
-		expect(JSON.parse(payload.blocks))
-			.toHaveProperty("0.text.text", expect.stringContaining("<https://github.com/octocat|`octocat`>"));
+		expect(getBody(await request!.text())).toMatchObject({
+			text: "A new repository Foo/Bar was just created by octocat",
+			blocks: expect.arrayContaining([
+				expect.objectContaining({
+					text: expect.objectContaining({
+						text: expect.stringContaining("<https://github.com/octocat|`octocat`>"),
+					}),
+				}),
+			]),
+		});
 	});
 
 	it("ignores ping events", async () => {

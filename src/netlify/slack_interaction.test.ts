@@ -48,7 +48,7 @@ describe("slack interaction handler", () => {
 
 		expect(reactRequest).not.toBeNull();
 		expect(reactRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
-		expect(getBody(await reactRequest!.text())).toMatchObject({
+		expect(getBody(await reactRequest!.text())).toEqual({
 			channel: "SLACK_CHANNEL",
 			name: "wastebasket",
 			timestamp: "messageTimestamp",
@@ -56,14 +56,14 @@ describe("slack interaction handler", () => {
 
 		expect(updateRequest).not.toBeNull();
 		expect(updateRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
-		expect(getBody(await updateRequest!.text())).toMatchObject({
+		expect(getBody(await updateRequest!.text())).toEqual({
 			blocks: [{
 				text: { text: "Repository was deleted by <@slackUserId>.", type: "mrkdwn" },
 				type: "section",
 			}],
 			channel: "SLACK_CHANNEL",
 			text: "Repository owner/repo was deleted by slackUserName.",
-			ts: "messageTimestamp",
+			thread_ts: "messageTimestamp",
 		});
 	});
 

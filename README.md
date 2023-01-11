@@ -21,8 +21,6 @@ to review and (if necessary) delete the new repo.
 
 The sequence diagram below shows the series of events and calls.
 
-_(Note the grey section is currently aspirational.)_
-
 ```mermaid
 sequenceDiagram
     actor Trainee
@@ -52,7 +50,6 @@ sequenceDiagram
     Slack-->>-Netlify: 200 OK
     Netlify-->>-Slack: 200 OK
     else Dismiss the message
-    rect rgb(235, 235, 235)
     Admin->>Slack: Click "Dismiss"
     Slack->>+Netlify: POST /slack_interaction
     Netlify->>+Slack: POST /chat.update
@@ -65,7 +62,6 @@ sequenceDiagram
     Note right of Slack: Respond to the post
     Slack-->>-Netlify: 200 OK
     Netlify-->>-Slack: 200 OK
-    end
     end
 ```
 

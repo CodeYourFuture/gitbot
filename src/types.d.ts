@@ -9,6 +9,7 @@ export interface Repository {
 }
 
 export interface MessageRef {
+	action: "delete" | "dismiss";
 	messageTs: string;
 	repo: Repository;
 	userId: string;

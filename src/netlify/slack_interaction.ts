@@ -16,7 +16,9 @@ const handler = async (event: Event): Promise<HandlerResponse> => {
 	}
 	if (payload) {
 		try {
-			await deleteRepo(payload);
+			if (payload.action === "delete") {
+				await deleteRepo(payload);
+			}
 			await updateMessage(payload);
 		} catch (err) {
 			console.error(err);

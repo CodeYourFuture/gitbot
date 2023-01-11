@@ -31,6 +31,13 @@ describe("repo event handler", () => {
 		expect(response).toEqual({ statusCode: 200 });
 		expect(request).not.toBeNull();
 		expect(request!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
+		const value = JSON.stringify({
+			repoName: "Foo/Bar",
+			repoUrl: "https://github.com/Foo/Bar",
+			userLogin: "octocat",
+			userName: "Monalisa Octocat",
+			userUrl: "https://github.com/octocat",
+		});
 		expect(getBody(await request!.text())).toEqual({
 			blocks: [
 				{
@@ -42,6 +49,15 @@ describe("repo event handler", () => {
 				},
 				{
 					elements: [
+						{
+							action_id: "dismiss-deletion",
+							text: {
+								text: "Dismiss",
+								type: "plain_text",
+							},
+							type: "button",
+							value,
+						},
 						{
 							action_id: "delete-repository",
 							confirm: {
@@ -69,13 +85,7 @@ describe("repo event handler", () => {
 								type: "plain_text",
 							},
 							type: "button",
-							value: JSON.stringify({
-								repoName: "Foo/Bar",
-								repoUrl: "https://github.com/Foo/Bar",
-								userLogin: "octocat",
-								userName: "Monalisa Octocat",
-								userUrl: "https://github.com/octocat",
-							}),
+							value,
 						},
 					],
 					type: "actions",

@@ -75,6 +75,80 @@ describe("slack interaction handler", () => {
 		});
 
 		expect(updateRequest).not.toBeNull();
+		expect(updateRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
+		expect(getBody(await updateRequest!.text())).toEqual({
+			blocks: [{
+				text: {
+					"text": "A new repository <repoUrl|`owner/repo`> was just created by <userUrl|userName>.",
+					"type": "mrkdwn",
+				},
+				type: "section",
+			}],
+			channel: "SLACK_CHANNEL",
+			text: "A new repository owner/repo was just created by userName",
+			ts: "messageTimestamp",
+		});
+	});
+
+	it("updates the message on dismiss", async () => {
+		const secret = "need-to-know-only";
+		process.env.GITHUB_TOKEN = "GITHUB_TOKEN";
+		process.env.SLACK_CHANNEL = "SLACK_CHANNEL";
+		process.env.SLACK_SIGNING_SECRET = secret;
+		process.env.SLACK_TOKEN = "SLACK_TOKEN";
+		let reactRequest: RestRequest | null = null;
+		let respondRequest: RestRequest | null = null;
+		let updateRequest: RestRequest | null = null;
+		server.use(
+			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+				respondRequest = req;
+				return res(ctx.json({ ok: true }));
+			}),
+			rest.post("https://slack.com/api/chat.update", (req, res, ctx) => {
+				updateRequest = req;
+				return res(ctx.json({ ok: true }));
+			}),
+			rest.post("https://slack.com/api/reactions.add", (req, res, ctx) => {
+				reactRequest = req;
+				return res(ctx.json({ ok: true }));
+			}),
+		);
+		const { body, signature, timestamp } = createPayload(secret, {
+			payload: JSON.stringify({
+				actions: [{
+					action_id: "dismiss-deletion",
+					value: JSON.stringify({ repoName: "owner/repo", repoUrl: "repoUrl", userLogin: "userLogin", userName: "userName", userUrl: "userUrl" }),
+				}],
+				message: { ts: "messageTimestamp" },
+				type: "block_actions",
+				user: { id: "slackUserId", username: "slackUserName" },
+			}),
+		});
+
+		await expect(makeRequest(body, signature, timestamp)).resolves.toEqual({ statusCode: 200 });
+
+		expect(reactRequest).not.toBeNull();
+		expect(reactRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
+		expect(getBody(await reactRequest!.text())).toEqual({
+			channel: "SLACK_CHANNEL",
+			name: "recycle",
+			timestamp: "messageTimestamp",
+		});
+
+		expect(respondRequest).not.toBeNull();
+		expect(respondRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
+		expect(getBody(await respondRequest!.text())).toEqual({
+			blocks: [{
+				text: { text: "Deletion was dismissed by <@slackUserId>.", type: "mrkdwn" },
+				type: "section",
+			}],
+			channel: "SLACK_CHANNEL",
+			text: "Deletion of repository owner/repo was dismissed by slackUserName.",
+			thread_ts: "messageTimestamp",
+		});
+
+		expect(updateRequest).not.toBeNull();
+		expect(updateRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
 		expect(getBody(await updateRequest!.text())).toEqual({
 			blocks: [{
 				text: {

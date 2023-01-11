@@ -7,6 +7,7 @@ import type { Maybe, MessageRef, Repository } from "./types";
 import { getConfig } from "./utils.js";
 
 const DELETE_ACTION_ID = "delete-repository";
+const DISMISS_ACTION_ID = "dismiss-deletion";
 export const SIGNATURE_HEADER = "x-slack-signature";
 export const TIMESTAMP_HEADER = "x-slack-request-timestamp";
 const VERSION = "v0";
@@ -29,10 +30,12 @@ interface SlackInteraction {
 	};
 }
 
-export async function updateMessage({ messageTs, repo, userId, userName }: MessageRef): Promise<void> {
+export async function updateMessage({ action, messageTs, repo, userId, userName }: MessageRef): Promise<void> {
 	const channel = getConfig("SLACK_CHANNEL");
 	const client = new WebClient(getConfig("SLACK_TOKEN"));
-	const text = `Repository ${repo.repoName} was deleted by ${userName}.`;
+	const text = action === "delete"
+		? `Repository ${repo.repoName} was deleted by ${userName}.`
+		: `Deletion of repository ${repo.repoName} was dismissed by ${userName}.`;
 	console.log(text);
 	await client.chat.update({
 		blocks: [repoSection(repo)],
@@ -42,11 +45,16 @@ export async function updateMessage({ messageTs, repo, userId, userName }: Messa
 	});
 	await client.reactions.add({
 		channel,
-		name: "wastebasket",
+		name: action === "delete" ? "wastebasket" : "recycle",
 		timestamp: messageTs,
 	});
 	await client.chat.postMessage({
-		blocks: [{ text: markdown(`Repository was deleted by <@${userId}>.`), type: "section" }],
+		blocks: [{
+			text: markdown(action === "delete"
+				? `Repository was deleted by <@${userId}>.`
+				: `Deletion was dismissed by <@${userId}>.`),
+			type: "section",
+		}],
 		channel,
 		text,
 		thread_ts: messageTs,
@@ -77,6 +85,7 @@ export const validatePayload = (body: string, signature: string, timestamp: numb
 
 const actionsSection = (repo: Repository): ActionsBlock => ({
 	elements: [
+		dismissButton(repo),
 		deleteButton(repo),
 	],
 	type: "actions",
@@ -100,13 +109,26 @@ const deleteButton = (repo: Repository): Button => ({
 	value: JSON.stringify(repo),
 });
 
+const dismissButton = (repo: Repository): Button => ({
+	action_id: DISMISS_ACTION_ID,
+	text: plainText("Dismiss"),
+	type: "button",
+	value: JSON.stringify(repo),
+});
+
 const fiveMinutesAgo = () => Math.floor((Date.now() / 1_000) - (5 * 60));
 
 const getPayload = ({ actions = [], message, user }: SlackInteraction): Maybe<MessageRef> => {
-	const action = actions.find(({ action_id }) => action_id === DELETE_ACTION_ID);
+	const action = actions.find(({ action_id }) => [DELETE_ACTION_ID, DISMISS_ACTION_ID].includes(action_id ?? ""));
 	if (action && action.value) {
 		const repo: Repository = JSON.parse(action.value);
-		return { messageTs: message.ts, repo, userId: user.id, userName: user.username };
+		return {
+			action: action.action_id === DELETE_ACTION_ID ? "delete" : "dismiss",
+			messageTs: message.ts,
+			repo,
+			userId: user.id,
+			userName: user.username,
+		};
 	}
 };
 

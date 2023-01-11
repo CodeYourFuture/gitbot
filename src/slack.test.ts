@@ -40,7 +40,7 @@ describe("validatePayload", () => {
 		})).toBeUndefined();
 	});
 
-	it("extracts the relevant action", async () => {
+	it("extracts the relevant delete action", async () => {
 		const payload = {
 			actions: [{
 				action_id: "delete-repository",
@@ -58,6 +58,38 @@ describe("validatePayload", () => {
 			timestamp,
 			signature,
 		})).toEqual({
+			action: "delete",
+			messageTs: "123.456",
+			repo: {
+				repoName: "repoName",
+				repoUrl: "repoUrl",
+				userName: "userName",
+				userUrl: "userUrl",
+			},
+			userId: "userId",
+			userName: "slackUserName",
+		});
+	});
+
+	it("extracts the relevant dismiss action", async () => {
+		const payload = {
+			actions: [{
+				action_id: "dismiss-deletion",
+				value: JSON.stringify({ repoName: "repoName", repoUrl: "repoUrl", userName: "userName", userUrl: "userUrl" }),
+			}],
+			message: { ts: "123.456" },
+			user: { id: "userId", username: "slackUserName" },
+		};
+		const body = `hello=world&payload=${JSON.stringify(payload)}`;
+		const secret = "secretsquirrel";
+		process.env.SLACK_SIGNING_SECRET = secret;
+		const { signature, timestamp } = sign(body, secret);
+		expect(attemptValidation({
+			body,
+			timestamp,
+			signature,
+		})).toEqual({
+			action: "dismiss",
 			messageTs: "123.456",
 			repo: {
 				repoName: "repoName",

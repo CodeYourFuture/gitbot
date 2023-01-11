@@ -39,7 +39,8 @@ describe("repo event handler", () => {
 						"type": "mrkdwn",
 					},
 					type: "section",
-				}, {
+				},
+				{
 					elements: [
 						{
 							action_id: "delete-repository",

@@ -16,6 +16,7 @@ describe("slack interaction handler", () => {
 		process.env.SLACK_TOKEN = "SLACK_TOKEN";
 		let deleteRequest: RestRequest | null = null;
 		let reactRequest: RestRequest | null = null;
+		let respondRequest: RestRequest | null = null;
 		let updateRequest: RestRequest | null = null;
 		server.use(
 			rest.delete("https://api.github.com/repos/:owner/:repo", (req, res, ctx) => {
@@ -23,6 +24,10 @@ describe("slack interaction handler", () => {
 				return res(ctx.status(204));
 			}),
 			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+				respondRequest = req;
+				return res(ctx.json({ ok: true }));
+			}),
+			rest.post("https://slack.com/api/chat.update", (req, res, ctx) => {
 				updateRequest = req;
 				return res(ctx.json({ ok: true }));
 			}),
@@ -35,7 +40,7 @@ describe("slack interaction handler", () => {
 			payload: JSON.stringify({
 				actions: [{
 					action_id: "delete-repository",
-					value: JSON.stringify({ repoName: "owner/repo", repoUrl: "repoUrl", userName: "userName", userUrl: "userUrl" }),
+					value: JSON.stringify({ repoName: "owner/repo", repoUrl: "repoUrl", userLogin: "userLogin", userName: "userName", userUrl: "userUrl" }),
 				}],
 				message: { ts: "messageTimestamp" },
 				type: "block_actions",
@@ -57,9 +62,9 @@ describe("slack interaction handler", () => {
 			timestamp: "messageTimestamp",
 		});
 
-		expect(updateRequest).not.toBeNull();
-		expect(updateRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
-		expect(getBody(await updateRequest!.text())).toEqual({
+		expect(respondRequest).not.toBeNull();
+		expect(respondRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
+		expect(getBody(await respondRequest!.text())).toEqual({
 			blocks: [{
 				text: { text: "Repository was deleted by <@slackUserId>.", type: "mrkdwn" },
 				type: "section",
@@ -67,6 +72,20 @@ describe("slack interaction handler", () => {
 			channel: "SLACK_CHANNEL",
 			text: "Repository owner/repo was deleted by slackUserName.",
 			thread_ts: "messageTimestamp",
+		});
+
+		expect(updateRequest).not.toBeNull();
+		expect(getBody(await updateRequest!.text())).toEqual({
+			blocks: [{
+				text: {
+					"text": "A new repository <repoUrl|`owner/repo`> was just created by <userUrl|userName>.",
+					"type": "mrkdwn",
+				},
+				type: "section",
+			}],
+			channel: "SLACK_CHANNEL",
+			text: "A new repository owner/repo was just created by userName",
+			ts: "messageTimestamp",
 		});
 	});
 

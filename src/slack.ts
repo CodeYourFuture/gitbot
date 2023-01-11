@@ -29,19 +29,25 @@ interface SlackInteraction {
 	};
 }
 
-export async function updateMessage({ messageTs, repo: { repoName }, userId, userName }: MessageRef): Promise<void> {
+export async function updateMessage({ messageTs, repo, userId, userName }: MessageRef): Promise<void> {
 	const client = new WebClient(getConfig("SLACK_TOKEN"));
 	const channel = getConfig("SLACK_CHANNEL");
-	const text = `Repository ${repoName} was deleted by ${userName}.`;
+	const text = `Repository ${repo.repoName} was deleted by ${userName}.`;
 	console.log(text);
+	await client.chat.update({
+		blocks: [repoSection(repo)],
+		channel,
+		text: `A new repository ${repo.repoName} was just created by ${repo.userName ?? repo.userLogin}`,
+		ts: messageTs,
+	});
 	await client.reactions.add({
 		channel,
 		name: "wastebasket",
 		timestamp: messageTs,
 	});
 	await client.chat.postMessage({
-		channel,
 		blocks: [{ text: markdown(`Repository was deleted by <@${userId}>.`), type: "section" }],
+		channel,
 		text,
 		thread_ts: messageTs,
 	});

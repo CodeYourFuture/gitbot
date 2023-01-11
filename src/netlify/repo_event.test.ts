@@ -32,42 +32,47 @@ describe("repo event handler", () => {
 		expect(request).not.toBeNull();
 		expect(request!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
 		expect(getBody(await request!.text())).toEqual({
-			blocks: [{
-				accessory: {
-					action_id: "delete-repo",
-					confirm: {
-						confirm: {
-							text: "Yes",
-							type: "plain_text",
-						},
-						deny: {
-							text: "No",
-							type: "plain_text",
-						},
-						style: "danger",
-						text: {
-							text: "Are you sure you want to delete the repository Foo/Bar? This cannot be undone.",
-							type: "plain_text",
-						},
-						title: {
-							text: "Delete the repository?",
-							type: "plain_text",
-						},
-					},
-					style: "danger",
+			blocks: [
+				{
 					text: {
-						text: "Delete repo",
-						type: "plain_text",
+						"text": "A new repository <https://github.com/Foo/Bar|`Foo/Bar`> was just created by <https://github.com/octocat|Monalisa Octocat>.",
+						"type": "mrkdwn",
 					},
-					type: "button",
-					value: "Foo/Bar",
-				},
-				text: {
-					"text": "A new repository <https://github.com/Foo/Bar|`Foo/Bar`> was just created by <https://github.com/octocat|Monalisa Octocat>.",
-					"type": "mrkdwn",
-				},
-				type: "section",
-			}],
+					type: "section",
+				}, {
+					elements: [
+						{
+							action_id: "delete-repo",
+							confirm: {
+								confirm: {
+									text: "Yes",
+									type: "plain_text",
+								},
+								deny: {
+									text: "No",
+									type: "plain_text",
+								},
+								style: "danger",
+								text: {
+									text: "Are you sure you want to delete the repository Foo/Bar? This cannot be undone.",
+									type: "plain_text",
+								},
+								title: {
+									text: "Delete the repository?",
+									type: "plain_text",
+								},
+							},
+							style: "danger",
+							text: {
+								text: "Delete repo",
+								type: "plain_text",
+							},
+							type: "button",
+							value: "Foo/Bar",
+						},
+					],
+					type: "actions",
+				}],
 			channel: "SLACK_CHANNEL",
 			text: "A new repository Foo/Bar was just created by Monalisa Octocat",
 		});

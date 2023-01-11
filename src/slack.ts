@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-import type { Button, MrkdwnElement, PlainTextElement, SectionBlock } from "@slack/web-api";
+import type { ActionsBlock, Button, MrkdwnElement, PlainTextElement, SectionBlock } from "@slack/web-api";
 import { WebClient } from "@slack/web-api";
 
 import type { Maybe, Repository, RepoRef } from "./types";
@@ -56,6 +56,7 @@ export async function notifyChannel(repo: Repository): Promise<void> {
 	await client.chat.postMessage({
 		blocks: [
 			repoSection(repo),
+			actionsSection(repo),
 		],
 		channel,
 		text,
@@ -68,6 +69,13 @@ export const validatePayload = (body: string, signature: string, timestamp: numb
 	}
 	return getPayload(JSON.parse(Object.fromEntries(new URLSearchParams(body).entries()).payload));
 };
+
+const actionsSection = ({ repoName }: Repository): ActionsBlock => ({
+	elements: [
+		deleteButton(repoName),
+	],
+	type: "actions",
+});
 
 const deleteButton = (repoName: string): Button => ({
 	type: "button",
@@ -116,5 +124,4 @@ const repoSection = ({ repoName, repoUrl, userLogin, userName, userUrl }: Reposi
 	text: markdown(
 		`A new repository <${repoUrl}|\`${repoName}\`> was just created by <${userUrl}|${userName ? userName : `\`${userLogin}\``}>.`,
 	),
-	accessory: deleteButton(repoName),
 });

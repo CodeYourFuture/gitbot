@@ -3,7 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import type { ActionsBlock, Button, MrkdwnElement, PlainTextElement, SectionBlock } from "@slack/web-api";
 import { WebClient } from "@slack/web-api";
 
-import type { Maybe, Repository, MessageRef } from "./types";
+import type { Maybe, MessageRef, Repository } from "./types";
 import { getConfig } from "./utils.js";
 
 const DELETE_ACTION_ID = "delete-repository";
@@ -30,14 +30,14 @@ interface SlackInteraction {
 }
 
 export async function updateMessage({ messageTs, repo, userId, userName }: MessageRef): Promise<void> {
-	const client = new WebClient(getConfig("SLACK_TOKEN"));
 	const channel = getConfig("SLACK_CHANNEL");
+	const client = new WebClient(getConfig("SLACK_TOKEN"));
 	const text = `Repository ${repo.repoName} was deleted by ${userName}.`;
 	console.log(text);
 	await client.chat.update({
 		blocks: [repoSection(repo)],
 		channel,
-		text: `A new repository ${repo.repoName} was just created by ${repo.userName ?? repo.userLogin}`,
+		text: createdText(repo),
 		ts: messageTs,
 	});
 	await client.reactions.add({
@@ -55,9 +55,8 @@ export async function updateMessage({ messageTs, repo, userId, userName }: Messa
 
 export async function notifyChannel(repo: Repository): Promise<void> {
 	const channel = getConfig("SLACK_CHANNEL");
-	const token = getConfig("SLACK_TOKEN");
-	const client = new WebClient(token);
-	const text = `A new repository ${repo.repoName} was just created by ${repo.userName ?? repo.userLogin}`;
+	const client = new WebClient(getConfig("SLACK_TOKEN"));
+	const text = createdText(repo);
 	console.log(text);
 	await client.chat.postMessage({
 		blocks: [
@@ -82,6 +81,9 @@ const actionsSection = (repo: Repository): ActionsBlock => ({
 	],
 	type: "actions",
 });
+
+const createdText = ({ repoName, userLogin, userName }: Repository): string =>
+	`A new repository ${repoName} was just created by ${userName ?? userLogin}`;
 
 const deleteButton = (repo: Repository): Button => ({
 	type: "button",

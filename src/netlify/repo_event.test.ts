@@ -139,6 +139,36 @@ describe("repo event handler", () => {
 		await expect(makeRequest(body, signature)).resolves.toEqual({ statusCode: 200 });
 	});
 
+	it("highlights likely errors", async () => {
+		let request: RestRequest | null = null;
+		const secret = "shhh";
+		process.env.GITHUB_WEBHOOK_SECRET = secret;
+		server.use(
+			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+				request = req;
+				return res(ctx.json({ ok: true }));
+			}),
+		);
+		const { body, signature } = await createPayload(secret, {
+			action: "created",
+			repository: { full_name: "Foo/Bar-2", html_url: "https://github.com/Foo/Bar-2" },
+			sender: { html_url: "https://github.com/octocat", login: "octocat" },
+		} as RepositoryEvent);
+
+		await expect(makeRequest(body, signature)).resolves.toEqual({ statusCode: 200 });
+
+		expect(getBody(await request!.text())).toMatchObject({
+			text: "A new repository Foo/Bar-2 was just created by octocat",
+			blocks: expect.arrayContaining([
+				expect.objectContaining({
+					text: expect.objectContaining({
+						text: expect.stringContaining(":redflag: *The `-2` makes this likely a mistake.*"),
+					}),
+				}),
+			]),
+		});
+	});
+
 	describe("error states", () => {
 		beforeEach(() => {
 			console.error = jest.fn();

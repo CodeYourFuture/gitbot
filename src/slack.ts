@@ -149,9 +149,16 @@ const markdown = (text: string): MrkdwnElement => ({ text, type: "mrkdwn" });
 
 const plainText = (text: string): PlainTextElement => ({ text, type: "plain_text" });
 
-const repoSection = ({ repoName, repoUrl, userLogin, userName, userUrl }: Repository): SectionBlock => ({
-	type: "section",
-	text: markdown(
+const repoSection = ({ repoName, repoUrl, userLogin, userName, userUrl }: Repository): SectionBlock => {
+	const lines = [
 		`A new repository <${repoUrl}|\`${repoName}\`> was just created by <${userUrl}|${userName ? userName : `\`${userLogin}\``}>.`,
-	),
-});
+	];
+	const match = repoUrl.match(/-\d+$/);
+	if (match !== null) {
+		lines.push(`:redflag: *The \`${match[0]}\` makes this likely a mistake.*`);
+	}
+	return ({
+		type: "section",
+		text: markdown(lines.join("\n")),
+	});
+};

@@ -6,7 +6,7 @@ import type { Maybe, MessageRef } from "../types";
 
 type Event = Pick<HandlerEvent, "body" | "headers">;
 
-const handler = async (event: Event): Promise<HandlerResponse> => {
+const handler = (async (event: Event): Promise<HandlerResponse> => {
 	let payload: Maybe<MessageRef>;
 	try {
 		payload = validatePayload(getBody(event), getSignature(event), getTimestamp(event));
@@ -25,10 +25,7 @@ const handler = async (event: Event): Promise<HandlerResponse> => {
 		}
 	}
 	return { statusCode: 200 };
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const typecheck = handler satisfies Handler;
+}) satisfies Handler;
 
 const getBody = ({ body }: Event): string => {
 	if (body === null) {

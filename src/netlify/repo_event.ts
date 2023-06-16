@@ -11,7 +11,7 @@ const enum HttpStatus {
 
 type Event = Pick<HandlerEvent, "body" | "headers">
 
-const handler = async (event: Event): Promise<HandlerResponse> => {
+const handler = (async (event: Event): Promise<HandlerResponse> => {
 	let payload: Maybe<Repository>;
 	try {
 		payload = await validatePayload(getBody(event), getSignature(event));
@@ -27,10 +27,7 @@ const handler = async (event: Event): Promise<HandlerResponse> => {
 		}
 	}
 	return { statusCode: HttpStatus.OK };
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const typecheck = handler satisfies Handler;
+}) satisfies Handler;
 
 const getBody = ({ body }: Event): string => {
 	if (body === null) {

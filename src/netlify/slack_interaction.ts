@@ -2,7 +2,7 @@ import { Handler, HandlerEvent, HandlerResponse } from "@netlify/functions";
 
 import { deleteRepo } from "../github.js";
 import { SIGNATURE_HEADER, TIMESTAMP_HEADER, updateMessage, validatePayload } from "../slack.js";
-import type { Maybe, MessageRef } from "../types";
+import type { Maybe, MessageRef } from "../types.js";
 
 type Event = Pick<HandlerEvent, "body" | "headers">;
 

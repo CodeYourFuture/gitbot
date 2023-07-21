@@ -3,7 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import type { ActionsBlock, Button, MrkdwnElement, PlainTextElement, SectionBlock } from "@slack/web-api";
 import { WebClient } from "@slack/web-api";
 
-import type { Maybe, MessageRef, Repository } from "./types";
+import type { Maybe, MessageRef, Repository } from "./types.js";
 import { getConfig } from "./utils.js";
 
 const DELETE_ACTION_ID = "delete-repository";

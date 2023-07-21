@@ -17,7 +17,7 @@ jobs:
       - uses: "actions/setup-node@v3"
         with:
           cache: "npm"
-          node-version: "16"
+          node-version: "18"
       - run: "npm ci"
       - run: "npm run lint"
       - run: "npm run test"
@@ -37,7 +37,7 @@ jobs:
       - uses: "actions/setup-node@v3"
         with:
           cache: "npm"
-          node-version: "16"
+          node-version: "18"
       - run: "npm ci --omit dev"
       - uses: "actions/download-artifact@v3"
         with:

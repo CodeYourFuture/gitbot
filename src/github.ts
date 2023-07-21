@@ -2,7 +2,7 @@ import { Octokit } from "@octokit/rest";
 import { verify } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryCreatedEvent, RepositoryEvent } from "@octokit/webhooks-types";
 
-import type { Maybe, MessageRef, Repository } from "./types";
+import type { Maybe, MessageRef, Repository } from "./types.js";
 import { getConfig } from "./utils.js";
 
 export const SIGNATURE_HEADER = "x-hub-signature-256";

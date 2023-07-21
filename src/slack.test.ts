@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 
 import { validatePayload } from "./slack.js";
-import type { Maybe, MessageRef } from "./types";
+import type { Maybe, MessageRef } from "./types.js";
 
 describe("validatePayload", () => {
 	it("rejects invalid version", async () => {

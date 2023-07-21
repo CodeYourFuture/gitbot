@@ -2,7 +2,7 @@ import type { Handler, HandlerEvent, HandlerResponse } from "@netlify/functions"
 
 import { SIGNATURE_HEADER, validatePayload } from "../github.js";
 import { notifyChannel } from "../slack.js";
-import type { Maybe, Repository } from "../types";
+import type { Maybe, Repository } from "../types.js";
 
 const enum HttpStatus {
 	OK = 200,

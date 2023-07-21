@@ -1,4 +1,4 @@
-import type { Maybe } from "./types";
+import type { Maybe } from "./types.js";
 
 export function getConfig(name: string, required?: true): string;
 export function getConfig(name: string, required: false): Maybe<string>;

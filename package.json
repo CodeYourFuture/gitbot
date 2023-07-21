@@ -14,8 +14,8 @@
     "test": "jest"
   },
   "engines": {
-    "node": "^16",
-    "npm": "^8"
+    "node": "^18",
+    "npm": "^9"
   },
   "repository": {
     "type": "git",
@@ -32,8 +32,9 @@
     "@codeyourfuture/eslint-config-standard": "^4.0.3",
     "@netlify/functions": "^1.6.0",
     "@octokit/webhooks-types": "^6.11.0",
+    "@tsconfig/node18": "^18.2.0",
     "@types/jest": "^29.5.3",
-    "@types/node": "^16.18.38",
+    "@types/node": "^18.16.19",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "eslint": "^8.45.0",

@@ -1,7 +1,8 @@
 {
   "extends": [
     "@codeyourfuture/standard",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/stylistic",
+    "plugin:@typescript-eslint/strict"
   ],
   "ignorePatterns": [
     "lib/"
@@ -19,11 +20,5 @@
       }
     }
   ],
-  "parser": "@typescript-eslint/parser",
-  "root": true,
-  "rules": {
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-non-null-assertion": "error",
-    "@typescript-eslint/no-unused-vars": "error"
-  }
+  "root": true
 }

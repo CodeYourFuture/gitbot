@@ -11,7 +11,8 @@
     "prebuild": "rimraf lib/",
     "build": "tsc --project ./tsconfig.build.json",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "test:cover": "npm test -- --coverage"
   },
   "engines": {
     "node": "^18",

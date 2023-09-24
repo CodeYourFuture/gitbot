@@ -20,7 +20,7 @@ jobs:
           node-version: "18"
       - run: "npm ci"
       - run: "npm run lint"
-      - run: "npm run test"
+      - run: "npm run test:cover"
       - run: "npm run build"
       - uses: "actions/upload-artifact@v3"
         with:

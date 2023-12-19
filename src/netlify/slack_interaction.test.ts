@@ -1,9 +1,9 @@
 import { createHmac } from "node:crypto";
 
 import { HandlerResponse } from "@netlify/functions";
-import { rest, RestRequest } from "msw";
+import { http, HttpResponse, PathParams } from "msw";
 
-import { getBody, server } from "../../setupTests";
+import { getBody, server } from "../../setupTests.js";
 
 import { handler } from "./slack_interaction.js";
 
@@ -14,26 +14,28 @@ describe("slack interaction handler", () => {
 		process.env.SLACK_CHANNEL = "SLACK_CHANNEL";
 		process.env.SLACK_SIGNING_SECRET = secret;
 		process.env.SLACK_TOKEN = "SLACK_TOKEN";
-		let deleteRequest: RestRequest | null = null;
-		let reactRequest: RestRequest | null = null;
-		let respondRequest: RestRequest | null = null;
-		let updateRequest: RestRequest | null = null;
+		let deleteParams: PathParams | null = null;
+		let deleteRequest: Request | null = null;
+		let reactRequest: Request | null = null;
+		let respondRequest: Request | null = null;
+		let updateRequest: Request | null = null;
 		server.use(
-			rest.delete("https://api.github.com/repos/:owner/:repo", (req, res, ctx) => {
+			http.delete("https://api.github.com/repos/:owner/:repo", ({ request: req, params }) => {
 				deleteRequest = req;
-				return res(ctx.status(204));
+				deleteParams = params;
+				return new HttpResponse(null, { status: 204 });
 			}),
-			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+			http.post("https://slack.com/api/chat.postMessage", ({ request: req }) => {
 				respondRequest = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
-			rest.post("https://slack.com/api/chat.update", (req, res, ctx) => {
+			http.post("https://slack.com/api/chat.update", ({ request: req }) => {
 				updateRequest = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
-			rest.post("https://slack.com/api/reactions.add", (req, res, ctx) => {
+			http.post("https://slack.com/api/reactions.add", ({ request: req }) => {
 				reactRequest = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
 		);
 		const { body, signature, timestamp } = createPayload(secret, {
@@ -52,7 +54,7 @@ describe("slack interaction handler", () => {
 
 		expect(deleteRequest).not.toBeNull();
 		expect(deleteRequest!.headers.get("Authorization")).toBe("token GITHUB_TOKEN");
-		expect(deleteRequest!.params).toEqual({ owner: "owner", repo: "repo" });
+		expect(deleteParams).toEqual({ owner: "owner", repo: "repo" });
 
 		expect(reactRequest).not.toBeNull();
 		expect(reactRequest!.headers.get("Authorization")).toBe("Bearer SLACK_TOKEN");
@@ -96,21 +98,21 @@ describe("slack interaction handler", () => {
 		process.env.SLACK_CHANNEL = "SLACK_CHANNEL";
 		process.env.SLACK_SIGNING_SECRET = secret;
 		process.env.SLACK_TOKEN = "SLACK_TOKEN";
-		let reactRequest: RestRequest | null = null;
-		let respondRequest: RestRequest | null = null;
-		let updateRequest: RestRequest | null = null;
+		let reactRequest: Request | null = null;
+		let respondRequest: Request | null = null;
+		let updateRequest: Request | null = null;
 		server.use(
-			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+			http.post("https://slack.com/api/chat.postMessage", ({ request: req }) => {
 				respondRequest = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
-			rest.post("https://slack.com/api/chat.update", (req, res, ctx) => {
+			http.post("https://slack.com/api/chat.update", ({ request: req }) => {
 				updateRequest = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
-			rest.post("https://slack.com/api/reactions.add", (req, res, ctx) => {
+			http.post("https://slack.com/api/reactions.add", ({ request: req }) => {
 				reactRequest = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
 		);
 		const { body, signature, timestamp } = createPayload(secret, {

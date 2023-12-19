@@ -1,7 +1,7 @@
 import { type HandlerResponse } from "@netlify/functions";
 import { sign } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryEvent } from "@octokit/webhooks-types";
-import { rest, RestRequest } from "msw";
+import { http, HttpResponse } from "msw";
 
 import { getBody, server } from "../../setupTests.js";
 
@@ -9,15 +9,15 @@ import { handler } from "./repo_event.js";
 
 describe("repo event handler", () => {
 	it("notifies the specified Slack channel", async () => {
-		let request: RestRequest | null = null;
+		let request: Request | null = null;
 		const secret = "under-your-hat";
 		process.env.GITHUB_WEBHOOK_SECRET = secret;
 		process.env.SLACK_CHANNEL = "SLACK_CHANNEL";
 		process.env.SLACK_TOKEN = "SLACK_TOKEN";
 		server.use(
-			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+			http.post("https://slack.com/api/chat.postMessage", ({ request: req }) => {
 				request = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
 		);
 		const { body, signature } = await createPayload(secret, {
@@ -96,13 +96,13 @@ describe("repo event handler", () => {
 	});
 
 	it("uses the login as a fallback", async () => {
-		let request: RestRequest | null = null;
+		let request: Request | null = null;
 		const secret = "shhh";
 		process.env.GITHUB_WEBHOOK_SECRET = secret;
 		server.use(
-			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+			http.post("https://slack.com/api/chat.postMessage", ({ request: req }) => {
 				request = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
 		);
 		const { body, signature } = await createPayload(secret, {
@@ -140,13 +140,13 @@ describe("repo event handler", () => {
 	});
 
 	it("highlights likely errors", async () => {
-		let request: RestRequest | null = null;
+		let request: Request | null = null;
 		const secret = "shhh";
 		process.env.GITHUB_WEBHOOK_SECRET = secret;
 		server.use(
-			rest.post("https://slack.com/api/chat.postMessage", (req, res, ctx) => {
+			http.post("https://slack.com/api/chat.postMessage", ({ request: req }) => {
 				request = req;
-				return res(ctx.json({ ok: true }));
+				return HttpResponse.json({ ok: true });
 			}),
 		);
 		const { body, signature } = await createPayload(secret, {

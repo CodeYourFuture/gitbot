@@ -13,8 +13,8 @@ jobs:
   check:
     runs-on: "ubuntu-22.04"
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-node@v3"
+      - uses: "actions/checkout@v4"
+      - uses: "actions/setup-node@v4"
         with:
           cache: "npm"
           node-version: "20"
@@ -22,7 +22,7 @@ jobs:
       - run: "npm run lint"
       - run: "npm run test:cover"
       - run: "npm run build"
-      - uses: "actions/upload-artifact@v3"
+      - uses: "actions/upload-artifact@v4"
         with:
           if-no-files-found: "error"
           name: "build-output"
@@ -33,13 +33,13 @@ jobs:
     if: "github.ref == 'refs/heads/main'"
     runs-on: "ubuntu-22.04"
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-node@v3"
+      - uses: "actions/checkout@v4"
+      - uses: "actions/setup-node@v4"
         with:
           cache: "npm"
           node-version: "20"
       - run: "npm ci --omit dev"
-      - uses: "actions/download-artifact@v3"
+      - uses: "actions/download-artifact@v4"
         with:
           name: "build-output"
           path: "lib/"

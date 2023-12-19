@@ -15,7 +15,7 @@
     "test:cover": "npm test -- --coverage"
   },
   "engines": {
-    "node": "^18",
+    "node": "^20",
     "npm": "^9 || ^10"
   },
   "repository": {
@@ -51,6 +51,6 @@
     "@octokit/rest": "^20.0.2",
     "@octokit/webhooks-methods": "^4.0.0",
     "@slack/web-api": "^6.10.0",
-    "@tsconfig/node18": "^18.2.2"
+    "@tsconfig/node20": "^20.1.2"
   }
 }

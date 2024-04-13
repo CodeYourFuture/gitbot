@@ -1,3 +1,10 @@
 [functions]
     directory = "lib/netlify/"
     node_bundler = "esbuild"
+
+[[redirects]]
+    from = "/"
+    to = "https://github.com/CodeYourFuture/gitbot/"
+    status = 200
+    [redirects.headers]
+        X-From = "Netlify"

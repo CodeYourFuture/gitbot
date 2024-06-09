@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { type HandlerResponse } from "@netlify/functions";
 import { sign } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryEvent } from "@octokit/webhooks-types";
@@ -192,7 +193,7 @@ describe("repo event handler", () => {
 
 	const createPayload = async (secret: string, event: PingEvent | RepositoryEvent): Promise<{ body: string, signature: string }> => {
 		const body = JSON.stringify(event);
-		const signature = await sign({ algorithm: "sha256", secret }, body);
+		const signature = await sign(secret, body);
 		return { body, signature };
 	};
 

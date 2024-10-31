@@ -1,8 +1,8 @@
 import cyfConfig from "@codeyourfuture/eslint-config-standard";
+import vitestEslint from "@vitest/eslint-plugin";
 import tsEslint from "typescript-eslint";
-import jestEslint from "eslint-plugin-jest";
 
-const jestEslintRecommended = jestEslint.configs["flat/recommended"];
+const vitestEslintRecommended = vitestEslint.configs.recommended;
 
 /** @type {import("eslint").Linter.Config} */
 export default [
@@ -14,10 +14,10 @@ export default [
 	...tsEslint.configs.stylistic,
 	{
 		files: ["src/**/*.test.ts"],
-		...jestEslintRecommended,
+		...vitestEslintRecommended,
 		rules: {
 			"@typescript-eslint/no-non-null-assertion": "off",
-			...jestEslintRecommended.rules,
+			...vitestEslintRecommended.rules,
 		},
 	},
 ];

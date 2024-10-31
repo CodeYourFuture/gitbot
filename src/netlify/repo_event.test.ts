@@ -1,8 +1,8 @@
-import { jest } from "@jest/globals";
 import { type HandlerResponse } from "@netlify/functions";
 import { sign } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryEvent } from "@octokit/webhooks-types";
 import { http, HttpResponse } from "msw";
+import { vi } from "vitest";
 
 import { getBody, server } from "../../setupTests.js";
 
@@ -172,7 +172,7 @@ describe("repo event handler", () => {
 
 	describe("error states", () => {
 		beforeEach(() => {
-			console.error = jest.fn();
+			console.error = vi.fn();
 		});
 
 		it("rejects invalid payloads", async () => {
@@ -182,7 +182,7 @@ describe("repo event handler", () => {
 		});
 
 		it("rejects missing headers", async () => {
-			console.error = jest.fn();
+			console.error = vi.fn();
 			await expect(handler({ body: "", headers: {} })).resolves.toEqual({ statusCode: 400 });
 		});
 

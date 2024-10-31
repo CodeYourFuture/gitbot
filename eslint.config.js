@@ -4,7 +4,7 @@ import jestEslint from "eslint-plugin-jest";
 
 const jestEslintRecommended = jestEslint.configs["flat/recommended"];
 
-/** @type {import("eslint").Linter.FlatConfig} */
+/** @type {import("eslint").Linter.Config} */
 export default [
 	{
 		ignores: ["lib/"],

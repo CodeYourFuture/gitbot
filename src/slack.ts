@@ -80,7 +80,8 @@ export const validatePayload = (body: string, signature: string, timestamp: numb
 	if (!isValid(body, signature, timestamp)) {
 		throw new Error("payload validation failed");
 	}
-	return getPayload(JSON.parse(Object.fromEntries(new URLSearchParams(body).entries()).payload));
+	const payload = JSON.parse(Object.fromEntries(new URLSearchParams(body).entries()).payload) as SlackInteraction;
+	return getPayload(payload);
 };
 
 const actionsSection = (repo: Repository): ActionsBlock => ({
@@ -120,8 +121,8 @@ const fiveMinutesAgo = () => Math.floor((Date.now() / 1_000) - (5 * 60));
 
 const getPayload = ({ actions = [], message, user }: SlackInteraction): Maybe<MessageRef> => {
 	const action = actions.find(({ action_id }) => [DELETE_ACTION_ID, DISMISS_ACTION_ID].includes(action_id ?? ""));
-	if (action && action.value) {
-		const repo: Repository = JSON.parse(action.value);
+	if (action?.value) {
+		const repo = JSON.parse(action.value) as Repository;
 		return {
 			action: action.action_id === DELETE_ACTION_ID ? "delete" : "dismiss",
 			messageTs: message.ts,
@@ -153,7 +154,7 @@ const repoSection = ({ repoName, repoUrl, userLogin, userName, userUrl }: Reposi
 	const lines = [
 		`A new repository <${repoUrl}|\`${repoName}\`> was just created by <${userUrl}|${userName ? userName : `\`${userLogin}\``}>.`,
 	];
-	const match = repoUrl.match(/-\d+$/);
+	const match = /-\d+$/.exec(repoUrl);
 	if (match !== null) {
 		lines.push(`:redflag: *The \`${match[0]}\` makes this likely a mistake.*`);
 	}

@@ -4,20 +4,20 @@ import { validatePayload } from "./slack.js";
 import type { Maybe, MessageRef } from "./types.js";
 
 describe("validatePayload", () => {
-	it("rejects invalid version", async () => {
+	it("rejects invalid version", () => {
 		expect(() => attemptValidation({
 			signature: "v1=abc123",
 		})).toThrow("invalid signature version");
 	});
 
-	it("rejects old timestamp", async () => {
+	it("rejects old timestamp", () => {
 		expect(() => attemptValidation({
 			signature: "v0=abc123",
 			timestamp: Math.floor((Date.now() / 1_000) - (6 * 60)),
 		})).toThrow("timestamp too old");
 	});
 
-	it("rejects invalid hash", async () => {
+	it("rejects invalid hash", () => {
 		const body = "goodbye=world";
 		process.env.SLACK_SIGNING_SECRET = "keepitquiet";
 		const { signature, timestamp } = sign(body, "someothersecret");
@@ -28,7 +28,7 @@ describe("validatePayload", () => {
 		})).toThrow("payload validation failed");
 	});
 
-	it("turns the body into an object", async () => {
+	it("turns the body into an object", () => {
 		const body = `hello=world&payload=${JSON.stringify({})}`;
 		const secret = "secretsquirrel";
 		process.env.SLACK_SIGNING_SECRET = secret;
@@ -40,7 +40,7 @@ describe("validatePayload", () => {
 		})).toBeUndefined();
 	});
 
-	it("extracts the relevant delete action", async () => {
+	it("extracts the relevant delete action", () => {
 		const payload = {
 			actions: [{
 				action_id: "delete-repository",
@@ -71,7 +71,7 @@ describe("validatePayload", () => {
 		});
 	});
 
-	it("extracts the relevant dismiss action", async () => {
+	it("extracts the relevant dismiss action", () => {
 		const payload = {
 			actions: [{
 				action_id: "dismiss-deletion",
@@ -114,6 +114,6 @@ describe("validatePayload", () => {
 const sign = (payload: string, secret: string): { signature: string, timestamp: number } => {
 	const timestamp = Math.floor(Date.now() / 1_000);
 	const hmac = createHmac("sha256", secret);
-	hmac.update(`v0:${timestamp}:${payload}`);
+	hmac.update(`v0:${timestamp.toFixed(0)}:${payload}`);
 	return { signature: `v0=${hmac.digest("hex")}`, timestamp };
 };

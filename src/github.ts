@@ -18,7 +18,7 @@ export const validatePayload = async (body: string, signature: string): Promise<
 	if (!(await verify(secret, body, signature))) {
 		throw new Error("payload validation failed");
 	}
-	const payload: PingEvent | RepositoryEvent = JSON.parse(body);
+	const payload = JSON.parse(body) as PingEvent | RepositoryEvent;
 	if (!("action" in payload) || payload.action !== "created") {
 		console.log(`Ignoring event: ${"action" in payload ? payload.action : "ping"}`);
 		return;

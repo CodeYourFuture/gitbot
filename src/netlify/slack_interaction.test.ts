@@ -169,12 +169,12 @@ describe("slack interaction handler", () => {
 		const timestamp = Math.floor(Date.now() / 1_000);
 		const body = new URLSearchParams(payload).toString();
 		const hmac = createHmac("sha256", secret);
-		hmac.update(`v0:${timestamp}:${body}`);
+		hmac.update(`v0:${timestamp.toFixed(0)}:${body}`);
 		const signature = hmac.digest("hex");
 		return { body, signature, timestamp };
 	};
 
 	const makeRequest = (body: string, signature: string, timestamp: number): Promise<HandlerResponse> => {
-		return handler({ body, headers: { "x-slack-request-timestamp": `${timestamp}`, "x-slack-signature": `v0=${signature}` } });
+		return handler({ body, headers: { "x-slack-request-timestamp": timestamp.toFixed(0), "x-slack-signature": `v0=${signature}` } });
 	};
 });

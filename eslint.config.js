@@ -9,6 +9,11 @@ export default [
 	{
 		ignores: ["lib/"],
 	},
+	{
+		linterOptions: {
+			reportUnusedDisableDirectives: "error",
+		},
+	},
 	cyfConfig,
 	...tsEslint.configs.strict,
 	...tsEslint.configs.stylistic,

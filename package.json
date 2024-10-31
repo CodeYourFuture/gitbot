@@ -9,7 +9,7 @@
   "scripts": {
     "prebuild": "rimraf lib/",
     "build": "tsc --project ./tsconfig.build.json",
-    "lint": "eslint --max-warnings 0 --report-unused-disable-directives .",
+    "lint": "eslint --max-warnings 0 .",
     "test": "vitest --run",
     "test:cover": "npm test -- --coverage"
   },

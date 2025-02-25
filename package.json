@@ -37,22 +37,22 @@
     "@netlify/functions": "^2.8.2",
     "@octokit/webhooks-types": "^7.6.1",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^22.9.3",
-    "@vitest/coverage-v8": "^2.1.5",
-    "@vitest/eslint-plugin": "^1.1.10",
+    "@types/node": "^22.13.5",
+    "@vitest/coverage-v8": "^2.1.9",
+    "@vitest/eslint-plugin": "^1.1.31",
     "cross-env": "^7.0.3",
-    "eslint": "^9.15.0",
-    "msw": "^2.6.6",
+    "eslint": "^9.21.0",
+    "msw": "^2.7.3",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "~5.6.3",
-    "typescript-eslint": "^8.15.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.25.0",
     "vitest": "^2.1.4"
   },
   "dependencies": {
-    "@octokit/rest": "^21.0.2",
-    "@octokit/webhooks-methods": "^5.1.0",
-    "@slack/web-api": "^7.7.0",
+    "@octokit/rest": "^21.1.1",
+    "@octokit/webhooks-methods": "^5.1.1",
+    "@slack/web-api": "^7.8.0",
     "@tsconfig/node22": "^22.0.0"
   }
 }

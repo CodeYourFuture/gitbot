@@ -152,6 +152,7 @@ const plainText = (text: string): PlainTextElement => ({ text, type: "plain_text
 
 const repoSection = ({ repoName, repoUrl, userLogin, userName, userUrl }: Repository): SectionBlock => {
 	const lines = [
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- also handles empty name case ""
 		`A new repository <${repoUrl}|\`${repoName}\`> was just created by <${userUrl}|${userName ? userName : `\`${userLogin}\``}>.`,
 	];
 	const match = /-\d+$/.exec(repoUrl);

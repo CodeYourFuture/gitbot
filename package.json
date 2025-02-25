@@ -34,7 +34,7 @@
   "homepage": "https://github.com/CodeYourFuture/gitbot#readme",
   "devDependencies": {
     "@codeyourfuture/eslint-config-standard": "^5.1.0",
-    "@netlify/functions": "^2.8.2",
+    "@netlify/functions": "^3.0.0",
     "@octokit/webhooks-types": "^7.6.1",
     "@types/eslint": "^9.6.1",
     "@types/node": "^22.13.5",

@@ -1,0 +1,16 @@
+# https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+---
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    commit-message:
+      prefix: "Prod"
+      prefix-development: "Dev"
+    directory: "/"
+    open-pull-requests-limit: 0 # security updates only
+    reviewers:
+      - "textbook"
+    schedule:
+      interval: "monthly"
+    versioning-strategy: "increase"

@@ -6,15 +6,15 @@ Integrating GitHub and Slack via Netlify.
 
 ## What is this?
 
-Trainees often accidentally create repositories in the CYF GitHub organization. This leads to lots of excess repos and
-makes it hard to manage the org.
+Learners often accidentally create repositories in the CYF GitHub organization.
+This leads to lots of excess repos and makes it hard to manage the org.
 
-A [webhook][github-webhooks] in GitHub is configured to send all relevant events (_"Repository created, deleted,
-archived, unarchived, publicized, privatized, edited, renamed, or transferred."_) in the CYF org to a [Netlify
-function][netlify-functions] (in CYF's account).
+A [webhook][github-webhooks] in GitHub is configured to send all relevant events\* in the CYF org to a [Netlify function][netlify-functions] (in CYF's account).
 
 The function in turn interacts with Slack to post messages notifying organization owners of any new repository,
 allowing them to review and (if necessary) delete the new repository.
+
+\* _"Repository created, deleted, archived, unarchived, publicized, privatized, edited, renamed, or transferred."_
 
 ## Architecture
 
@@ -22,11 +22,11 @@ The sequence diagram below shows the series of events and calls.
 
 ```mermaid
 sequenceDiagram
-    actor Trainee
+    actor Learner
     participant GitHub
     participant Netlify
     participant Slack
-    Trainee->>GitHub: Create repo CodeYourFuture/{name}
+    Learner->>GitHub: Create repo CodeYourFuture/{name}
     GitHub->>+Netlify: POST /repo_event
     Netlify->>+Slack: POST /chat.postMessage
     Note right of Slack: Post in #35;cyf-github-owners

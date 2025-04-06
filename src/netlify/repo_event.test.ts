@@ -43,8 +43,8 @@ describe("repo event handler", () => {
 			blocks: [
 				{
 					text: {
-						"text": "A new repository <https://github.com/Foo/Bar|`Foo/Bar`> was just created by <https://github.com/octocat|Monalisa Octocat>.",
-						"type": "mrkdwn",
+						text: "A new repository <https://github.com/Foo/Bar|`Foo/Bar`> was just created by <https://github.com/octocat|Monalisa Octocat>.",
+						type: "mrkdwn",
 					},
 					type: "section",
 				},
@@ -191,7 +191,7 @@ describe("repo event handler", () => {
 		});
 	});
 
-	const createPayload = async (secret: string, event: PingEvent | RepositoryEvent): Promise<{ body: string, signature: string }> => {
+	const createPayload = async (secret: string, event: PingEvent | RepositoryEvent): Promise<{ body: string; signature: string }> => {
 		const body = JSON.stringify(event);
 		const signature = await sign(secret, body);
 		return { body, signature };

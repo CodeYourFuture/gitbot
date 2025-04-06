@@ -106,12 +106,12 @@ describe("validatePayload", () => {
 		body = "",
 		signature = "",
 		timestamp = 0,
-	}: { body?: string, signature?: string, timestamp?: number } = {}): Maybe<MessageRef> => {
+	}: { body?: string; signature?: string; timestamp?: number } = {}): Maybe<MessageRef> => {
 		return validatePayload(body, signature, timestamp);
 	};
 });
 
-const sign = (payload: string, secret: string): { signature: string, timestamp: number } => {
+const sign = (payload: string, secret: string): { signature: string; timestamp: number } => {
 	const timestamp = Math.floor(Date.now() / 1_000);
 	const hmac = createHmac("sha256", secret);
 	hmac.update(`v0:${timestamp.toFixed(0)}:${payload}`);

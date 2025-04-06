@@ -81,8 +81,8 @@ describe("slack interaction handler", () => {
 		expect(getBody(await updateRequest!.text())).toEqual({
 			blocks: [{
 				text: {
-					"text": "A new repository <repoUrl|`owner/repo`> was just created by <userUrl|userName>.",
-					"type": "mrkdwn",
+					text: "A new repository <repoUrl|`owner/repo`> was just created by <userUrl|userName>.",
+					type: "mrkdwn",
 				},
 				type: "section",
 			}],
@@ -154,8 +154,8 @@ describe("slack interaction handler", () => {
 		expect(getBody(await updateRequest!.text())).toEqual({
 			blocks: [{
 				text: {
-					"text": "A new repository <repoUrl|`owner/repo`> was just created by <userUrl|userName>.",
-					"type": "mrkdwn",
+					text: "A new repository <repoUrl|`owner/repo`> was just created by <userUrl|userName>.",
+					type: "mrkdwn",
 				},
 				type: "section",
 			}],
@@ -165,7 +165,7 @@ describe("slack interaction handler", () => {
 		});
 	});
 
-	const createPayload = (secret: string, payload: Record<string, string>): { body: string, signature: string, timestamp: number } => {
+	const createPayload = (secret: string, payload: Record<string, string>): { body: string; signature: string; timestamp: number } => {
 		const timestamp = Math.floor(Date.now() / 1_000);
 		const body = new URLSearchParams(payload).toString();
 		const hmac = createHmac("sha256", secret);

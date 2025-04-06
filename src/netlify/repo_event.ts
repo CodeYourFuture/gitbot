@@ -9,7 +9,7 @@ const enum HttpStatus {
 	BAD_REQUEST = 400,
 }
 
-type Event = Pick<HandlerEvent, "body" | "headers">
+type Event = Pick<HandlerEvent, "body" | "headers">;
 
 const handler = (async (event: Event): Promise<HandlerResponse> => {
 	let payload: Maybe<Repository>;

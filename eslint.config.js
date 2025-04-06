@@ -14,7 +14,7 @@ export default [
 			reportUnusedDisableDirectives: "error",
 		},
 	},
-	cyfConfig,
+	...cyfConfig.configs.standard,
 	...tsEslint.configs.strict,
 	...tsEslint.configs.stylistic,
 	...typeScriptOnly(

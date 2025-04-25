@@ -43,7 +43,7 @@ jobs:
         with:
           name: "build-output"
           path: "lib/"
-      - run: "npm install --global netlify-cli@17.36.1"
+      - run: "npm install --global netlify-cli@latest"
       - run: "netlify deploy --dir . --prod true"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

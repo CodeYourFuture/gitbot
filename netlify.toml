@@ -5,6 +5,6 @@
 [[redirects]]
     from = "/"
     to = "https://github.com/CodeYourFuture/gitbot/"
-    status = 200
+    status = 302
     [redirects.headers]
         X-From = "Netlify"

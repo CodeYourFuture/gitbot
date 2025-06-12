@@ -9,8 +9,6 @@ updates:
       prefix-development: "Dev"
     directory: "/"
     open-pull-requests-limit: 0 # security updates only
-    reviewers:
-      - "textbook"
     schedule:
       interval: "monthly"
     versioning-strategy: "increase"

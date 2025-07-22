@@ -30,6 +30,8 @@ jobs:
   deploy:
     needs:
       - "check"
+    environment:
+      name: netlify
     if: "github.ref == 'refs/heads/main'"
     runs-on: "ubuntu-22.04"
     steps:
@@ -48,4 +50,4 @@ jobs:
       - run: "netlify deploy --dir . --no-build --prod true"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: ${{ env.NETLIFY_SITE_ID }}

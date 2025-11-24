@@ -11,13 +11,13 @@ on:
 
 jobs:
   check:
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v4"
       - uses: "actions/setup-node@v4"
         with:
           cache: "npm"
-          node-version: "22"
+          node-version: "24"
       - run: "npm ci"
       - run: "npm run lint"
       - run: "npm run test:cover"
@@ -33,13 +33,13 @@ jobs:
     environment:
       name: netlify
     if: "github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'"
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v4"
       - uses: "actions/setup-node@v4"
         with:
           cache: "npm"
-          node-version: "22"
+          node-version: "24"
       - run: "npm ci --omit dev"
       - uses: "actions/download-artifact@v4"
         with:

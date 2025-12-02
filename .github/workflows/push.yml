@@ -47,7 +47,7 @@ jobs:
           path: "lib/"
       - run: "npm install --global netlify-cli@latest"
       - run: "netlify --version"
-      - run: "netlify deploy --dir . --no-build --prod true"
+      - run: "netlify deploy --no-build --prod true"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}

@@ -13,7 +13,7 @@ export const TIMESTAMP_HEADER = "x-slack-request-timestamp";
 const VERSION = "v0";
 
 interface SlackInteraction {
-	actions: Button[];
+	actions?: Button[];
 	channel: {
 		id: string;
 		name: string;

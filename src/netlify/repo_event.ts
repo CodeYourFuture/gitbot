@@ -4,10 +4,7 @@ import { SIGNATURE_HEADER, validatePayload } from "../github.js";
 import { notifyChannel } from "../slack.js";
 import type { Maybe, Repository } from "../types.js";
 
-const enum HttpStatus {
-	OK = 200,
-	BAD_REQUEST = 400,
-}
+import { Status as HttpStatus } from "./http.js";
 
 type Event = Pick<HandlerEvent, "body" | "headers">;
 

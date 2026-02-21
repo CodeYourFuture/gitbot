@@ -4,6 +4,8 @@ import { deleteRepo } from "../github.js";
 import { SIGNATURE_HEADER, TIMESTAMP_HEADER, updateMessage, validatePayload } from "../slack.js";
 import type { Maybe, MessageRef } from "../types.js";
 
+import { Status as HttpStatus } from "./http.js";
+
 type Event = Pick<HandlerEvent, "body" | "headers">;
 
 const handler = (async (event: Event): Promise<HandlerResponse> => {
@@ -12,7 +14,7 @@ const handler = (async (event: Event): Promise<HandlerResponse> => {
 		payload = validatePayload(getBody(event), getSignature(event), getTimestamp(event));
 	} catch (err) {
 		console.error(err);
-		return { statusCode: 400 };
+		return { statusCode: HttpStatus.BAD_REQUEST };
 	}
 	if (payload) {
 		try {
@@ -24,7 +26,7 @@ const handler = (async (event: Event): Promise<HandlerResponse> => {
 			console.error(err);
 		}
 	}
-	return { statusCode: 200 };
+	return { statusCode: HttpStatus.OK };
 }) satisfies Handler;
 
 const getBody = ({ body }: Event): string => {

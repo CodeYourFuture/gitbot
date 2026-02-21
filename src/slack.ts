@@ -30,9 +30,18 @@ interface SlackInteraction {
 	};
 }
 
+let client: WebClient | null = null;
+
+function getClient(): WebClient {
+	if (client !== null) {
+		return client;
+	}
+	return (client = new WebClient(getConfig("SLACK_TOKEN")));
+}
+
 export async function updateMessage({ action, messageTs, repo, userId, userName }: MessageRef): Promise<void> {
 	const channel = getConfig("SLACK_CHANNEL");
-	const client = new WebClient(getConfig("SLACK_TOKEN"));
+	const client = getClient();
 	const text = action === "delete"
 		? `Repository ${repo.repoName} was deleted by ${userName}.`
 		: `Deletion of repository ${repo.repoName} was dismissed by ${userName}.`;

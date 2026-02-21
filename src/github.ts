@@ -7,9 +7,18 @@ import { getConfig } from "./utils.js";
 
 export const SIGNATURE_HEADER = "x-hub-signature-256";
 
+let client: Octokit | null = null;
+
+function getClient(): Octokit {
+	if (client !== null) {
+		return client;
+	}
+	return (client = new Octokit({ auth: getConfig("GITHUB_TOKEN") }));
+}
+
 export const deleteRepo = async ({ repo: { repoName } }: MessageRef): Promise<void> => {
 	const [owner, repo] = repoName.split("/");
-	const client = new Octokit({ auth: getConfig("GITHUB_TOKEN") });
+	const client = getClient();
 	await client.rest.repos.delete({ owner, repo });
 };
 

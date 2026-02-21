@@ -3,12 +3,22 @@
 version: 2
 
 updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
   - package-ecosystem: "npm"
     commit-message:
       prefix: "Prod"
       prefix-development: "Dev"
     directory: "/"
-    open-pull-requests-limit: 0 # security updates only
     schedule:
-      interval: "monthly"
+      interval: "weekly"
     versioning-strategy: "increase"
+    groups:
+      npm-in-range:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

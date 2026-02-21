@@ -33,19 +33,19 @@
   },
   "homepage": "https://github.com/CodeYourFuture/gitbot#readme",
   "devDependencies": {
-    "@codeyourfuture/eslint-config-standard": "^8.0.0",
+    "@codeyourfuture/eslint-config-standard": "^8.1.1",
     "@netlify/functions": "^5.1.2",
     "@octokit/webhooks-types": "^7.6.1",
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.10.4",
     "@vitest/coverage-v8": "^4.0.16",
-    "@vitest/eslint-plugin": "^1.6.5",
-    "eslint": "^9.39.2",
+    "@vitest/eslint-plugin": "^1.6.9",
+    "eslint": "^10.0.1",
     "msw": "^2.12.7",
     "rimraf": "^6.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.52.0",
+    "typescript-eslint": "^8.56.0",
     "vitest": "^4.0.4"
   },
   "dependencies": {

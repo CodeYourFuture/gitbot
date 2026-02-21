@@ -37,7 +37,7 @@
     "@netlify/functions": "^5.1.2",
     "@octokit/webhooks-types": "^7.6.1",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^24.10.4",
+    "@types/node": "^24.10.13",
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/eslint-plugin": "^1.6.9",
     "eslint": "^10.0.1",
@@ -52,6 +52,6 @@
     "@octokit/rest": "^22.0.1",
     "@octokit/webhooks-methods": "^6.0.0",
     "@slack/web-api": "^7.13.0",
-    "@tsconfig/node24": "^24.0.3"
+    "@tsconfig/node24": "^24.0.4"
   }
 }

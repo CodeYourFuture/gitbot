@@ -22,7 +22,7 @@ jobs:
       - run: "npm run lint"
       - run: "npm run test:cover"
       - run: "npm run build"
-      - uses: "actions/upload-artifact@v5"
+      - uses: "actions/upload-artifact@v6"
         with:
           if-no-files-found: "error"
           name: "build-output"
@@ -41,7 +41,7 @@ jobs:
           cache: "npm"
           node-version: "24"
       - run: "npm ci --omit dev"
-      - uses: "actions/download-artifact@v5"
+      - uses: "actions/download-artifact@v7"
         with:
           name: "build-output"
           path: "lib/"

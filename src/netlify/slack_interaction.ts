@@ -1,4 +1,4 @@
-import { Handler, HandlerEvent, HandlerResponse } from "@netlify/functions";
+import type { Handler, HandlerEvent, HandlerResponse } from "@netlify/functions";
 
 import { deleteRepo } from "../github.js";
 import { SIGNATURE_HEADER, TIMESTAMP_HEADER, updateMessage, validatePayload } from "../slack.js";

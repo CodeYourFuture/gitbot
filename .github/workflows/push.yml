@@ -22,7 +22,7 @@ jobs:
       - run: "npm run lint"
       - run: "npm run test:cover"
       - run: "npm run build"
-      - uses: "actions/upload-artifact@v6"
+      - uses: "actions/upload-artifact@v7"
         with:
           if-no-files-found: "error"
           name: "build-output"

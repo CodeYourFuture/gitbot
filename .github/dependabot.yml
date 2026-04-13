@@ -11,6 +11,8 @@ updates:
     commit-message:
       prefix: "Prod"
       prefix-development: "Dev"
+    cooldown:
+      default-days: 7
     directory: "/"
     schedule:
       interval: "weekly"

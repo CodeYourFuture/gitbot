@@ -13,7 +13,7 @@ jobs:
   check:
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v6"
+      - uses: "actions/checkout@v7"
       - uses: "actions/setup-node@v6"
         with:
           cache: "npm"
@@ -35,7 +35,7 @@ jobs:
     if: "github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v6"
+      - uses: "actions/checkout@v7"
       - uses: "actions/setup-node@v6"
         with:
           cache: "npm"

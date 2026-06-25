@@ -1,6 +1,7 @@
 # CYF GitBot
 
 [![Node.js CI][ci-badge]][ci-link]
+[![Maintainability Rating][sonar-badge]][sonar-link]
 
 Integrating GitHub and Slack via Netlify.
 
@@ -85,3 +86,5 @@ The Netlify functions require the following environment variables:
 [github-webhooks]: https://docs.github.com/en/developers/webhooks-and-events/webhooks/about-webhooks
 [netlify-functions]: https://functions.netlify.com/
 [slack-channel]: https://codeyourfuture.slack.com/archives/C03LSS9TNRW
+[sonar-link]: https://sonarcloud.io/summary/new_code?id=CodeYourFuture_gitbot
+[sonar-badge]: https://sonarcloud.io/api/project_badges/measure?project=CodeYourFuture_gitbot&metric=sqale_rating

@@ -50,7 +50,7 @@ jobs:
         with:
           name: "build-output"
           path: "lib/"
-      - run: "npm install --global netlify-cli@latest"
+      - run: "npm install --global netlify-cli@26.1.0"
       - run: "netlify --version"
       - run: "netlify deploy --no-build --prod true"
         env:

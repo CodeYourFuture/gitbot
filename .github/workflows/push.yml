@@ -13,7 +13,9 @@ jobs:
   check:
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v6"
+      - uses: "actions/checkout@v7"
+        with:
+          fetch-depth: 0
       - uses: "actions/setup-node@v6"
         with:
           cache: "npm"
@@ -21,6 +23,9 @@ jobs:
       - run: "npm ci"
       - run: "npm run lint"
       - run: "npm run test:cover"
+      - uses: "SonarSource/sonarqube-scan-action@713881670b6b3676cda39549040e2d88c70d582e" # v8.2.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - run: "npm run build"
       - uses: "actions/upload-artifact@v7"
         with:
@@ -35,7 +40,7 @@ jobs:
     if: "github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v6"
+      - uses: "actions/checkout@v7"
       - uses: "actions/setup-node@v6"
         with:
           cache: "npm"
@@ -45,7 +50,7 @@ jobs:
         with:
           name: "build-output"
           path: "lib/"
-      - run: "npm install --global netlify-cli@latest"
+      - run: "npm install --global netlify-cli@26.1.0"
       - run: "netlify --version"
       - run: "netlify deploy --no-build --prod true"
         env:

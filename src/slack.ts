@@ -33,10 +33,8 @@ interface SlackInteraction {
 let client: WebClient | null = null;
 
 function getClient(): WebClient {
-	if (client !== null) {
-		return client;
-	}
-	return (client = new WebClient(getConfig("SLACK_TOKEN")));
+	client ??= new WebClient(getConfig("SLACK_TOKEN"));
+	return client;
 }
 
 export async function updateMessage({ action, messageTs, repo, userId, userName }: MessageRef): Promise<void> {

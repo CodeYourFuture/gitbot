@@ -158,16 +158,19 @@ const markdown = (text: string): MrkdwnElement => ({ text, type: "mrkdwn" });
 const plainText = (text: string): PlainTextElement => ({ text, type: "plain_text" });
 
 const repoSection = ({ repoName, repoUrl, userLogin, userName, userUrl }: Repository): SectionBlock => {
-	const repoLink = `<${repoUrl}|\`${repoName}\`>`;
+	const repoLink = `<${repoUrl}|${code(repoName)}>`;
 	// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- also handles empty name case ""
-	const userLink = `<${userUrl}|${userName ? userName : `\`${userLogin}\``}>`;
+	const userLink = `<${userUrl}|${userName || code(userLogin)}>`;
 	const lines = [`A new repository ${repoLink} was just created by ${userLink}.`];
 	const match = /-\d+$/.exec(repoUrl);
 	if (match !== null) {
-		lines.push(`:redflag: *The \`${match[0]}\` makes this likely a mistake.*`);
+		lines.push(`:redflag: *The ${code(match[0])} makes this likely a mistake.*`);
 	}
 	return ({
 		type: "section",
 		text: markdown(lines.join("\n")),
 	});
 };
+
+/** Format the value as inline code. */
+const code = (value: string): string => `\`${value}\``;

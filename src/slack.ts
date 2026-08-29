@@ -160,10 +160,10 @@ const markdown = (text: string): MrkdwnElement => ({ text, type: "mrkdwn" });
 const plainText = (text: string): PlainTextElement => ({ text, type: "plain_text" });
 
 const repoSection = ({ repoName, repoUrl, userLogin, userName, userUrl }: Repository): SectionBlock => {
-	const lines = [
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- also handles empty name case ""
-		`A new repository <${repoUrl}|\`${repoName}\`> was just created by <${userUrl}|${userName ? userName : `\`${userLogin}\``}>.`,
-	];
+	const repoLink = `<${repoUrl}|\`${repoName}\`>`;
+	// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- also handles empty name case ""
+	const userLink = `<${userUrl}|${userName ? userName : `\`${userLogin}\``}>`;
+	const lines = [`A new repository ${repoLink} was just created by ${userLink}.`];
 	const match = /-\d+$/.exec(repoUrl);
 	if (match !== null) {
 		lines.push(`:redflag: *The \`${match[0]}\` makes this likely a mistake.*`);

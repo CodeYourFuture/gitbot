@@ -17,6 +17,9 @@ updates:
     schedule:
       interval: "weekly"
     versioning-strategy: "increase"
+    ignore:
+      - dependency-name: "@types/node"
+        versions: [">=25"] # currently using Node 24
     groups:
       npm-in-range:
         patterns:

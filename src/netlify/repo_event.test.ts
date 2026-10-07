@@ -1,7 +1,7 @@
-import { type HandlerResponse } from "@netlify/functions";
+import type { HandlerResponse } from "@netlify/functions";
 import { sign } from "@octokit/webhooks-methods";
 import type { PingEvent, RepositoryEvent } from "@octokit/webhooks-types";
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse } from "msw/http";
 import { vi } from "vitest";
 
 import { getBody, server } from "../../setupTests.js";

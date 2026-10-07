@@ -1,7 +1,8 @@
 import { createHmac } from "node:crypto";
 
-import { HandlerResponse } from "@netlify/functions";
-import { http, HttpResponse, PathParams } from "msw";
+import type { HandlerResponse } from "@netlify/functions";
+import type { PathParams } from "msw";
+import { http, HttpResponse } from "msw/http";
 
 import { getBody, server } from "../../setupTests.js";
 

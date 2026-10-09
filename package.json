@@ -34,10 +34,10 @@
   "homepage": "https://github.com/CodeYourFuture/gitbot#readme",
   "devDependencies": {
     "@codeyourfuture/eslint-config-standard": "^8.1.1",
-    "@netlify/functions": "^6.0.1",
+    "@netlify/functions": "^6.0.2",
     "@octokit/webhooks-types": "^7.6.1",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^24.19.0",
+    "@types/node": "^24.19.1",
     "@vitest/coverage-v8": "^5.0.3",
     "@vitest/eslint-plugin": "^1.6.27",
     "eslint": "^10.11.0",
@@ -50,7 +50,7 @@
   "dependencies": {
     "@octokit/rest": "^22.0.1",
     "@octokit/webhooks-methods": "^6.0.0",
-    "@slack/web-api": "^8.1.1",
+    "@slack/web-api": "^8.2.0",
     "@tsconfig/node24": "^24.0.5"
   }
 }

@@ -19,7 +19,7 @@ jobs:
       - uses: "actions/setup-node@v7"
         with:
           cache: "npm"
-          node-version: "24"
+          node-version: "26"
       - run: "npm ci"
       - run: "npm run lint"
       - run: "npm run test:cover"
@@ -44,13 +44,13 @@ jobs:
       - uses: "actions/setup-node@v7"
         with:
           cache: "npm"
-          node-version: "24"
+          node-version: "26"
       - run: "npm ci --omit dev"
       - uses: "actions/download-artifact@v8"
         with:
           name: "build-output"
           path: "lib/"
-      - run: "npm install --global netlify-cli@26.1.0"
+      - run: "npm install --global netlify-cli@27.16.2"
       - run: "netlify --version"
       - run: "netlify deploy --no-build --prod true"
         env:

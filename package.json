@@ -14,7 +14,7 @@
     "test:cover": "npm test -- --coverage"
   },
   "engines": {
-    "node": "^24.11",
+    "node": "^26.13",
     "npm": ">=11"
   },
   "repository": {
@@ -37,7 +37,7 @@
     "@netlify/functions": "^6.0.3",
     "@octokit/webhooks-types": "^7.6.1",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^24.19.2",
+    "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.0.5",
     "@vitest/eslint-plugin": "^1.6.28",
     "eslint": "^10.13.0",
@@ -51,6 +51,6 @@
     "@octokit/rest": "^22.0.1",
     "@octokit/webhooks-methods": "^6.0.0",
     "@slack/web-api": "^8.2.0",
-    "@tsconfig/node24": "^24.0.5"
+    "@tsconfig/node26": "^26.0.1"
   }
 }

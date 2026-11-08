@@ -19,7 +19,7 @@ updates:
     versioning-strategy: "increase"
     ignore:
       - dependency-name: "@types/node"
-        versions: [">=25"] # currently using Node 24
+        versions: [">=27"] # currently using Node 26
     groups:
       npm-in-range:
         patterns:

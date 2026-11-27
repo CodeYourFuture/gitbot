@@ -38,19 +38,19 @@
     "@octokit/webhooks-types": "^7.6.1",
     "@types/eslint": "^9.6.1",
     "@types/node": "^26.6.6",
-    "@vitest/coverage-v8": "^5.0.5",
+    "@vitest/coverage-v8": "^5.1.1",
     "@vitest/eslint-plugin": "^1.6.28",
-    "eslint": "^10.14.0",
-    "msw": "^3.0.4",
+    "eslint": "^10.15.0",
+    "msw": "^3.0.7",
     "rimraf": "^6.1.4",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.1",
+    "typescript-eslint": "^8.73.0",
     "vitest": "^5.0.3"
   },
   "dependencies": {
     "@octokit/rest": "^22.0.1",
     "@octokit/webhooks-methods": "^6.0.0",
-    "@slack/web-api": "^8.3.0",
-    "@tsconfig/node26": "^26.0.1"
+    "@slack/web-api": "^8.5.0",
+    "@tsconfig/node26": "^26.0.2"
   }
 }
